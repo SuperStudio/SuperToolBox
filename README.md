@@ -14,13 +14,13 @@ SuperToolBox 是一款**Window 工具箱**
 
 下载地址：[点此下载](https://github.com/SuperStudio/SuperToolBox/releases)
 
+<img src="Image/image-20221110021925653.png" alt="image-20221110021925653" style="zoom:80%;" />
+
 # 关于
 
 SuperToolBox 是一款**Window 工具箱**，支持以下特点：
 
-## 特性
-
-
+1. URL 编码/解码
 
 # 文档
 

@@ -1,5 +1,6 @@
 ﻿using SuperControls.Style;
 using SuperToolBox.Config;
+using SuperToolBox.ViewModel;
 using SuperToolBox.Windows;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,8 @@ namespace SuperToolBox
     /// </summary>
     public partial class MainWindow : BaseWindow
     {
+
+        private VieModel_Main vieModel { get; set; }
         public MainWindow()
         {
             InitializeComponent();
@@ -33,6 +36,8 @@ namespace SuperToolBox
 
         public void Init()
         {
+            vieModel = new VieModel_Main();
+            this.DataContext = vieModel;
             ConfigManager.InitConfig(); // 读取配置
         }
         private void BaseWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -119,6 +124,40 @@ namespace SuperToolBox
                 contextMenu.IsOpen = true;
             }
             e.Handled = true;
+        }
+
+        private void searchBox_Search(object sender, RoutedEventArgs e)
+        {
+            string value = searchBox.Text;
+            if (string.IsNullOrEmpty(value)) value = "";
+            vieModel.LoadToolList(value);
+        }
+
+        private void OpenTool(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            if (button != null && button.Tag != null && long.TryParse(button.Tag.ToString(), out long id))
+            {
+                vieModel.OpenTool(id);
+                for (int i = 0; i < vieModel.ToolList.Count; i++)
+                {
+                    if (vieModel.ToolList[i].ToolID == id)
+                    {
+                        tabControl.SelectedIndex = i;
+                        break;
+                    }
+                }
+
+            }
+        }
+
+        private void CloseTabItem(object sender, RoutedEventArgs e)
+        {
+            int idx = tabControl.SelectedIndex;
+            if (idx >= 0 && idx < vieModel.ToolTabs.Count)
+            {
+                vieModel.ToolTabs.RemoveAt(idx);
+            }
         }
     }
 }
