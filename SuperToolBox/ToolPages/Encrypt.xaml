@@ -1,0 +1,47 @@
+﻿<Page
+    x:Class="SuperToolBox.ToolPages.Encrypt"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:SuperToolBox.ToolPages"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="Encrypt"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+
+    <Grid>
+        <StackPanel Orientation="Vertical">
+            <Border
+                Margin="5"
+                Padding="5"
+                Background="{DynamicResource Window.Side.Background}"
+                CornerRadius="2">
+                <TextBlock
+                    HorizontalAlignment="Left"
+                    Style="{StaticResource BaseTextBlock}"
+                    Text="计算 MD5" />
+            </Border>
+            <TabControl
+                Margin="5"
+                ItemContainerStyle="{StaticResource FlatTabItem}"
+                Style="{StaticResource FlatTabControl}">
+                <TabItem Header="字符串" />
+                <TabItem Header="文件" />
+                <TabItem Header="文件夹" />
+                <TabItem Header="批量文件" />
+            </TabControl>
+            <StackPanel Margin="5" Orientation="Horizontal">
+                <TextBlock
+                    Foreground="{DynamicResource Window.Sub.Foreground}"
+                    Style="{StaticResource BaseTextBlock}"
+                    Text="文件名" />
+                <Button
+                    Margin="5"
+                    BorderBrush="{DynamicResource Button.Selected.BorderBrush}"
+                    Content="选择文件"
+                    Style="{StaticResource BorderButton}" />
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Page>

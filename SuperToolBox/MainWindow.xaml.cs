@@ -1,7 +1,9 @@
 ﻿using SuperControls.Style;
 using SuperToolBox.Config;
+using SuperToolBox.Entity;
 using SuperToolBox.ViewModel;
 using SuperToolBox.Windows;
+using SuperUtils.Framework.WinNativeMethods;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +19,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using static SuperUtils.Framework.WinNativeMethods.HotKey;
 
 namespace SuperToolBox
 {
@@ -39,10 +42,18 @@ namespace SuperToolBox
             vieModel = new VieModel_Main();
             this.DataContext = vieModel;
             ConfigManager.InitConfig(); // 读取配置
+            CreateSqlTables();
         }
         private void BaseWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             SaveConfigValue();
+            HotKey.UnregisterAllHotKey();
+        }
+
+
+        private void CreateSqlTables()
+        {
+            MouseCommand.InitSqlite();
         }
 
 
@@ -97,10 +108,27 @@ namespace SuperToolBox
             }
         }
 
+        public Action HotKeyHandler1;
+        public Action HotKeyHandler2;
+        public bool HotKeySuccess1;
+        public bool HotKeySuccess2;
+
         private void BaseWindow_ContentRendered(object sender, EventArgs e)
         {
             AdjustWindow();
             if (ConfigManager.Main.FirstRun) ConfigManager.Main.FirstRun = false;
+
+            // 注册停止/开始的热键
+            HotKeySuccess1 = HotKey.RegisterHotKey(this, 95270001, (uint)Modifiers.None | (uint)Modifiers.Control, Key.F11, () =>
+            {
+                //MessageBox.Show("触发热键 F11");
+                HotKeyHandler1?.Invoke();
+            });
+            HotKeySuccess2 = HotKey.RegisterHotKey(this, 95270002, (uint)Modifiers.None | (uint)Modifiers.Control, Key.F12, () =>
+             {
+                 //MessageBox.Show("触发热键 F11");
+                 HotKeyHandler2?.Invoke();
+             });
         }
 
         private void OpenSetting(object sender, RoutedEventArgs e)
@@ -139,14 +167,25 @@ namespace SuperToolBox
             if (button != null && button.Tag != null && long.TryParse(button.Tag.ToString(), out long id))
             {
                 vieModel.OpenTool(id);
-                for (int i = 0; i < vieModel.ToolList.Count; i++)
+                // 设置选中
+
+                for (int i = 0; i < vieModel.ToolTabs.Count; i++)
                 {
-                    if (vieModel.ToolList[i].ToolID == id)
+                    if (vieModel.ToolTabs[i].ToolID == id)
                     {
                         tabControl.SelectedIndex = i;
                         break;
                     }
                 }
+
+                //for (int i = 0; i < vieModel.ToolList.Count; i++)
+                //{
+                //    if (vieModel.ToolList[i].ToolID == id)
+                //    {
+
+                //        break;
+                //    }
+                //}
 
             }
         }

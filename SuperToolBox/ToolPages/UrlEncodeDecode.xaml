@@ -2,6 +2,7 @@
     x:Class="SuperToolBox.ToolPages.UrlEncodeDecode"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:SuperToolBox.ToolPages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -9,6 +10,7 @@
     Title="UrlEncodeDecode"
     d:DesignHeight="450"
     d:DesignWidth="800"
+    Loaded="Page_Loaded"
     mc:Ignorable="d">
 
     <Grid>
@@ -24,13 +26,14 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="auto" />
             </Grid.RowDefinitions>
             <StackPanel Grid.Row="0" Orientation="Horizontal">
 
                 <Button
                     Width="25"
                     Height="25"
-                    Margin="5,5,0,0"
+                    Margin="5"
                     Padding="0"
                     VerticalAlignment="Stretch"
                     super:CommonExt.CornerRadius="5"
@@ -48,7 +51,7 @@
                 <Button
                     Width="25"
                     Height="25"
-                    Margin="5,5,0,0"
+                    Margin="5"
                     Padding="0"
                     VerticalAlignment="Stretch"
                     super:CommonExt.CornerRadius="5"
@@ -64,22 +67,55 @@
                     </Viewbox>
                 </Button>
 
+                <CheckBox
+                    Name="checkBox"
+                    Margin="10,0"
+                    VerticalAlignment="Center"
+                    super:CheckBoxExt.HookWidth="12"
+                    super:CheckBoxExt.MarkHeight="18"
+                    super:CheckBoxExt.MarkWidth="18"
+                    Content="自动换行"
+                    FontSize="14"
+                    IsChecked="False"
+                    Style="{StaticResource NormalCheckBox}" />
+
             </StackPanel>
 
             <Border
                 Grid.Row="1"
                 Margin="5"
                 Background="{DynamicResource Window.Side.Background}"
-                CornerRadius="2">
-                <TextBox
+                CornerRadius="2"
+                PreviewKeyDown="Border_PreviewKeyDown"
+                PreviewMouseWheel="originTextBox_MouseWheel">
+                <avalonEdit:TextEditor
                     Name="originTextBox"
                     Padding="5"
-                    HorizontalAlignment="Stretch"
+                    Background="Transparent"
+                    BorderThickness="0"
                     ContextMenu="{StaticResource TextBoxContextMenu}"
+                    FontFamily="微软雅黑"
+                    FontSize="15"
                     Foreground="{DynamicResource Window.Sub.Foreground}"
-                    Style="{StaticResource MultiLineTextBox}"
-                    Text="" />
+                    ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                    ScrollViewer.VerticalScrollBarVisibility="Auto"
+                    ShowLineNumbers="True"
+                    SyntaxHighlighting="Json"
+                    WordWrap="{Binding ElementName=checkBox, Path=IsChecked}" />
 
+
+            </Border>
+
+            <Border
+                Grid.Row="2"
+                Margin="5"
+                Style="{StaticResource InfoBorder}">
+                <TextBlock
+                    HorizontalAlignment="Left"
+                    Foreground="{DynamicResource Window.Sub.Foreground}"
+                    Style="{StaticResource BaseTextBlock}"
+                    Text="F3转为一行，ctrl+shift+f 格式化为 json"
+                    TextAlignment="Left" />
             </Border>
 
         </Grid>
@@ -113,7 +149,7 @@
                 <Button
                     Width="25"
                     Height="25"
-                    Margin="5,5,0,0"
+                    Margin="5"
                     Padding="0"
                     VerticalAlignment="Stretch"
                     super:CommonExt.CornerRadius="5"
@@ -132,7 +168,7 @@
                 <Button
                     Width="25"
                     Height="25"
-                    Margin="5,5,0,0"
+                    Margin="5"
                     Padding="0"
                     VerticalAlignment="Stretch"
                     super:CommonExt.CornerRadius="5"

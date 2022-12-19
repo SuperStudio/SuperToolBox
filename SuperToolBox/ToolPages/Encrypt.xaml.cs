@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace SuperToolBox.ToolPages
 {
     /// <summary>
-    /// Interaction logic for RandomPwd.xaml
+    /// Interaction logic for Encrypt.xaml
     /// </summary>
-    public partial class RandomPwd : Page
+    public partial class Encrypt : Page
     {
-        public RandomPwd()
+        public Encrypt()
         {
             InitializeComponent();
         }

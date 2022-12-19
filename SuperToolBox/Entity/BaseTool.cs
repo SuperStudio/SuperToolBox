@@ -1,34 +1,29 @@
-﻿using DynamicData.Annotations;
-using System;
-using System.Collections.Generic;
+﻿using SuperUtils.WPF.VieModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SuperToolBox.Entity
 {
-    public class BaseTool : INotifyPropertyChanged
+    public class BaseTool : ViewModelBase
     {
         private long _ToolID;
         public long ToolID
         {
             get { return _ToolID; }
-            set { _ToolID = value; OnPropertyChanged(); }
+            set { _ToolID = value; RaisePropertyChanged(); }
         }
         private string _Name;
         public string Name
         {
             get { return _Name; }
-            set { _Name = value; OnPropertyChanged(); }
+            set { _Name = value; RaisePropertyChanged(); }
         }
 
         private string _UIPageName;
         public string UIPageName
         {
             get { return _UIPageName; }
-            set { _UIPageName = value; OnPropertyChanged(); }
+            set { _UIPageName = value; RaisePropertyChanged(); }
         }
 
         public BaseTool()
@@ -41,14 +36,5 @@ namespace SuperToolBox.Entity
             this.Name = Name;
             this.UIPageName = UIPageName;
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
     }
 }

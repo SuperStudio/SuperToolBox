@@ -1,8 +1,9 @@
-﻿using GalaSoft.MvvmLight;
+﻿
 using SuperToolBox.Config;
 using SuperToolBox.Entity;
 using SuperUtils.Common;
 using SuperUtils.Framework.ORM.Mapper;
+using SuperUtils.WPF.VieModel;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO.Ports;
@@ -15,7 +16,9 @@ namespace SuperToolBox.ViewModel
         public static List<BaseTool> TOOLS = new List<BaseTool>()
         {
             {new BaseTool(1,"URL编码/解码","UrlEncodeDecode") },
-            {new BaseTool(2,"随机密码","RandomPwd") },
+            //{new BaseTool(2,"加密","Encrypt") },
+            {new BaseTool(3,"鼠标控制","MouseControl") },
+            //{new BaseTool(4,"设备信息","DeviceInfo") },
         };
 
         public VieModel_Main()

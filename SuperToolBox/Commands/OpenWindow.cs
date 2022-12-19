@@ -1,7 +1,8 @@
-﻿using GalaSoft.MvvmLight.Command;
+﻿
 using SuperControls.Style.Upgrade;
 using SuperToolBox.Config;
 using SuperUtils.NetWork.Crawler;
+using SuperUtils.WPF.VieModel;
 using System.Windows;
 
 namespace SuperToolBox.Commands

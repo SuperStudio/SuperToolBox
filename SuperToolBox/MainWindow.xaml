@@ -7,6 +7,7 @@
     xmlns:local="clr-namespace:SuperToolBox"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:super="https://github.com/SuperStudio/SuperControls"
+    x:Name="main"
     Title="SuperToolBox——超级工具箱"
     Width="800"
     Height="450"
@@ -47,7 +48,6 @@
                         Width="auto"
                         Height="30"
                         Margin="0"
-                        Padding="0"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Top"
                         Background="Transparent"
@@ -59,8 +59,7 @@
                         Search="searchBox_Search"
                         SearchOnTextChanged="True"
                         ShowClearButton="True"
-                        ShowSearchButton="True"
-                        TextPadding="5 0" />
+                        ShowSearchButton="True" />
                     <ListBox
                         Grid.Row="1"
                         HorizontalContentAlignment="Stretch"
