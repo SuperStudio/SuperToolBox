@@ -63,6 +63,9 @@
       <HintPath>..\..\SuperUtils\SuperUtils\bin\Debug\SuperUtils.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.CodeDom, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.CodeDom.7.0.0\lib\net462\System.CodeDom.dll</HintPath>
+    </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.SQLite, Version=1.0.116.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
@@ -74,6 +77,7 @@
     <Reference Include="System.Data.SQLite.Linq, Version=1.0.116.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Data.SQLite.Linq.1.0.116.0\lib\net46\System.Data.SQLite.Linq.dll</HintPath>
     </Reference>
+    <Reference Include="System.Management" />
     <Reference Include="System.Reactive, Version=4.4.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Reactive.4.4.1\lib\net46\System.Reactive.dll</HintPath>
     </Reference>
@@ -112,8 +116,13 @@
     <Compile Include="Config\WindowConfig\Main.cs" />
     <Compile Include="Converters\MouseActionConverter.cs" />
     <Compile Include="Converters\MouseEventConverter.cs" />
+    <Compile Include="Entity\BaseDeviceInfo.cs" />
     <Compile Include="Entity\BaseTool.cs" />
+    <Compile Include="Entity\DriverInfo.cs" />
     <Compile Include="Entity\MouseCommand.cs" />
+    <Compile Include="ToolPages\NetWorkMonitor.xaml.cs">
+      <DependentUpon>NetWorkMonitor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ToolPages\DeviceInfo.xaml.cs">
       <DependentUpon>DeviceInfo.xaml</DependentUpon>
     </Compile>
@@ -148,6 +157,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="ToolPages\NetWorkMonitor.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="ToolPages\DeviceInfo.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -214,6 +227,7 @@
   <ItemGroup>
     <Content Include="References\ICSharpCode.AvalonEdit.dll" />
     <Content Include="References\Newtonsoft.Json.dll" />
+    <Resource Include="Resources\driver.png" />
     <Resource Include="Resources\ICO\github.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

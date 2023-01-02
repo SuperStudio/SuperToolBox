@@ -114,7 +114,7 @@
                     HorizontalAlignment="Left"
                     Foreground="{DynamicResource Window.Sub.Foreground}"
                     Style="{StaticResource BaseTextBlock}"
-                    Text="F3转为一行，ctrl+shift+f 格式化为 json"
+                    Text="F3转为一行，Alt+Shift+F 格式化为 json"
                     TextAlignment="Left" />
             </Border>
 

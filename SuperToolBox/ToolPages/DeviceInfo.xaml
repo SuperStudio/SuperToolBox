@@ -5,12 +5,360 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:SuperToolBox.ToolPages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:super="https://github.com/SuperStudio/SuperControls"
     Title="DeviceInfo"
     d:DesignHeight="450"
     d:DesignWidth="800"
+    Loaded="Page_Loaded"
     mc:Ignorable="d">
 
-    <Grid>
-        <TextBlock Style="{StaticResource BaseTextBlock}" Text="开发中" />
+    <Page.Resources />
+
+    <Grid x:Name="rootGrid">
+        <TabControl
+            Margin="10"
+            Background="Transparent"
+            ItemContainerStyle="{StaticResource FlatTabItem}"
+            SelectedIndex="1"
+            Style="{StaticResource FlatTabControl}">
+            <TabItem Header="系统信息">
+                <DataGrid
+                    x:Name="dataGrid1"
+                    Grid.Row="1"
+                    Margin="0,5"
+                    HorizontalContentAlignment="Left"
+                    CanUserResizeColumns="True"
+                    CanUserSortColumns="True"
+                    IsReadOnly="True"
+                    ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                    Style="{DynamicResource FlatDataGrid}">
+                    <DataGrid.RowStyle>
+                        <Style BasedOn="{StaticResource NormalDataGridRowStyle}" TargetType="DataGridRow">
+                            <!--<Setter Property="ContextMenu" Value="{StaticResource DataGridRowContextMenu}" />-->
+                            <EventSetter Event="MouseDoubleClick" Handler="Row_DoubleClick" />
+                            <!--<Setter Property="ContextMenu" Value="{StaticResource dataGridContextMenu}" />-->
+                        </Style>
+                    </DataGrid.RowStyle>
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn
+                            Width="2*"
+                            MinWidth="50"
+                            Header="信息"
+                            SortMemberPath="Key">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBox
+                                        MinWidth="40"
+                                        Margin="5"
+                                        Background="Transparent"
+                                        Foreground="{DynamicResource Window.Foreground}"
+                                        IsReadOnly="True"
+                                        Style="{StaticResource BaseTextBox}"
+                                        Text="{Binding Key, Mode=OneWay}"
+                                        TextAlignment="Left" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn
+                            Width="8*"
+                            MinWidth="50"
+                            Header="值"
+                            SortMemberPath="Value">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBox
+                                        MinWidth="40"
+                                        Background="Transparent"
+                                        Foreground="{DynamicResource Window.Sub.Foreground}"
+                                        IsReadOnly="True"
+                                        Style="{StaticResource BaseTextBox}"
+                                        Text="{Binding Value, Mode=OneWay}"
+                                        TextAlignment="Left" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+
+
+                </DataGrid>
+            </TabItem>
+            <TabItem Header="磁盘">
+                <ListBox
+                    Background="Transparent"
+                    ItemContainerStyle="{StaticResource NormalListBoxItem}"
+                    ItemsSource="{Binding CurrentDriverInfos}"
+                    Style="{StaticResource NormalListBox}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Image
+                                    Grid.Column="0"
+                                    Margin="5"
+                                    Source="/Resources/driver.png" />
+                                <Grid Grid.Column="1">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto" />
+                                        <RowDefinition Height="auto" />
+                                        <RowDefinition Height="auto" />
+                                    </Grid.RowDefinitions>
+                                    <StackPanel
+                                        Grid.Row="0"
+                                        Margin="10,2"
+                                        Orientation="Horizontal">
+                                        <Border Padding="5,0" Style="{StaticResource InfoBorder}">
+                                            <TextBlock
+                                                FontWeight="Bold"
+                                                Style="{StaticResource BaseTextBlock}"
+                                                Text="{Binding Name}" />
+
+                                        </Border>
+                                        <TextBlock
+                                            MinWidth="100"
+                                            Style="{StaticResource BaseTextBlock}"
+                                            Text="{Binding VolumeLabel}"
+                                            TextAlignment="Left" />
+                                        <TextBlock
+                                            MinWidth="40"
+                                            Foreground="{DynamicResource Window.Sub.Foreground}"
+                                            Style="{StaticResource BaseTextBlock}"
+                                            Text="{Binding DriveFormat}" />
+                                        <TextBlock
+                                            MinWidth="40"
+                                            Foreground="{DynamicResource Window.Sub.Foreground}"
+                                            Style="{StaticResource BaseTextBlock}"
+                                            Text="{Binding DriveType}" />
+                                    </StackPanel>
+                                    <ProgressBar
+                                        Grid.Row="1"
+                                        Width="500"
+                                        Height="30"
+                                        Margin="10,2"
+                                        HorizontalAlignment="Left"
+                                        Foreground="{DynamicResource Button.Selected.BorderBrush}"
+                                        Maximum="{Binding TotalSize}"
+                                        Minimum="0"
+                                        Style="{StaticResource NormalStaticProgressBar}"
+                                        Value="{Binding UsedSpace}" />
+                                    <StackPanel
+                                        Grid.Row="2"
+                                        Margin="10,2"
+                                        Orientation="Horizontal">
+                                        <TextBlock
+                                            Style="{StaticResource BaseTextBlock}"
+                                            Text="{Binding TotalSizeText, StringFormat=总大小：{0}}"
+                                            ToolTip="{Binding TotalSize}" />
+                                        <TextBlock
+                                            Style="{StaticResource BaseTextBlock}"
+                                            Text="{Binding AvailableFreeSpaceText, StringFormat=可用空间：{0}}"
+                                            ToolTip="{Binding AvailableFreeSpace}" />
+                                        <TextBlock
+                                            Style="{StaticResource BaseTextBlock}"
+                                            Text="{Binding UsedSpaceText, StringFormat=已用空间：{0}}"
+                                            ToolTip="{Binding UsedSpace}" />
+                                        <TextBlock Style="{StaticResource BaseTextBlock}" Text="{Binding UseSpaceRate, StringFormat=使用率：{0}}" />
+                                    </StackPanel>
+                                </Grid>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Vertical" />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                </ListBox>
+            </TabItem>
+            <TabItem Header="CPU">
+                <DataGrid
+                    x:Name="dataGrid2"
+                    Grid.Row="1"
+                    Margin="0,5"
+                    HorizontalContentAlignment="Left"
+                    CanUserResizeColumns="True"
+                    CanUserSortColumns="True"
+                    IsReadOnly="True"
+                    ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                    Style="{DynamicResource FlatDataGrid}">
+                    <DataGrid.RowStyle>
+                        <Style BasedOn="{StaticResource NormalDataGridRowStyle}" TargetType="DataGridRow">
+                            <!--<Setter Property="ContextMenu" Value="{StaticResource DataGridRowContextMenu}" />-->
+                            <EventSetter Event="MouseDoubleClick" Handler="Row_DoubleClick" />
+                            <!--<Setter Property="ContextMenu" Value="{StaticResource dataGridContextMenu}" />-->
+                        </Style>
+                    </DataGrid.RowStyle>
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn
+                            Width="2*"
+                            MinWidth="50"
+                            Header="信息"
+                            SortMemberPath="Key">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBox
+                                        MinWidth="40"
+                                        Margin="5"
+                                        Background="Transparent"
+                                        Foreground="{DynamicResource Window.Foreground}"
+                                        IsReadOnly="True"
+                                        Style="{StaticResource BaseTextBox}"
+                                        Text="{Binding Key, Mode=OneWay}"
+                                        TextAlignment="Left" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn
+                            Width="8*"
+                            MinWidth="50"
+                            Header="值"
+                            SortMemberPath="Value">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBox
+                                        MinWidth="40"
+                                        Background="Transparent"
+                                        Foreground="{DynamicResource Window.Sub.Foreground}"
+                                        IsReadOnly="True"
+                                        Style="{StaticResource BaseTextBox}"
+                                        Text="{Binding Value, Mode=OneWay}"
+                                        TextAlignment="Left" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+
+
+                </DataGrid>
+            </TabItem>
+            <TabItem Header="显卡">
+                <DataGrid
+                    x:Name="dataGrid3"
+                    Grid.Row="1"
+                    Margin="0,5"
+                    HorizontalContentAlignment="Left"
+                    CanUserResizeColumns="True"
+                    CanUserSortColumns="True"
+                    IsReadOnly="True"
+                    ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                    Style="{DynamicResource FlatDataGrid}">
+                    <DataGrid.RowStyle>
+                        <Style BasedOn="{StaticResource NormalDataGridRowStyle}" TargetType="DataGridRow">
+                            <EventSetter Event="MouseDoubleClick" Handler="Row_DoubleClick" />
+                        </Style>
+                    </DataGrid.RowStyle>
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn
+                            Width="2*"
+                            MinWidth="50"
+                            Header="信息"
+                            SortMemberPath="Key">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBox
+                                        MinWidth="40"
+                                        Margin="5"
+                                        Background="Transparent"
+                                        Foreground="{DynamicResource Window.Foreground}"
+                                        IsReadOnly="True"
+                                        Style="{StaticResource BaseTextBox}"
+                                        Text="{Binding Key, Mode=OneWay}"
+                                        TextAlignment="Left" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn
+                            Width="8*"
+                            MinWidth="50"
+                            Header="值"
+                            SortMemberPath="Value">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBox
+                                        MinWidth="40"
+                                        Background="Transparent"
+                                        Foreground="{DynamicResource Window.Sub.Foreground}"
+                                        IsReadOnly="True"
+                                        Style="{StaticResource BaseTextBox}"
+                                        Text="{Binding Value, Mode=OneWay}"
+                                        TextAlignment="Left" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+
+
+                </DataGrid>
+            </TabItem>
+            <TabItem Header="键盘">
+                <DataGrid
+                    x:Name="dataGrid4"
+                    Grid.Row="1"
+                    Margin="0,5"
+                    HorizontalContentAlignment="Left"
+                    CanUserResizeColumns="True"
+                    CanUserSortColumns="True"
+                    IsReadOnly="True"
+                    ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                    Style="{DynamicResource FlatDataGrid}">
+                    <DataGrid.RowStyle>
+                        <Style BasedOn="{StaticResource NormalDataGridRowStyle}" TargetType="DataGridRow">
+                            <EventSetter Event="MouseDoubleClick" Handler="Row_DoubleClick" />
+                        </Style>
+                    </DataGrid.RowStyle>
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn
+                            Width="2*"
+                            MinWidth="50"
+                            Header="信息"
+                            SortMemberPath="Key">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBox
+                                        MinWidth="40"
+                                        Margin="5"
+                                        Background="Transparent"
+                                        Foreground="{DynamicResource Window.Foreground}"
+                                        IsReadOnly="True"
+                                        Style="{StaticResource BaseTextBox}"
+                                        Text="{Binding Key, Mode=OneWay}"
+                                        TextAlignment="Left" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn
+                            Width="8*"
+                            MinWidth="50"
+                            Header="值"
+                            SortMemberPath="Value">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBox
+                                        MinWidth="40"
+                                        Background="Transparent"
+                                        Foreground="{DynamicResource Window.Sub.Foreground}"
+                                        IsReadOnly="True"
+                                        Style="{StaticResource BaseTextBox}"
+                                        Text="{Binding Value, Mode=OneWay}"
+                                        TextAlignment="Left" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+
+
+                </DataGrid>
+            </TabItem>
+
+        </TabControl>
+
+        <!--<super:LoadingLine
+            x:Name="loadingLine"
+            Height="30"
+            VerticalAlignment="Center"
+            DotInterval="10" />-->
     </Grid>
 </Page>

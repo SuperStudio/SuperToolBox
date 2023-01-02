@@ -1,0 +1,759 @@
+﻿using SuperUtils.IO;
+using SuperUtils.Time;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Management;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SuperToolBox.Entity
+{
+    public class BaseDeviceInfo
+    {
+        public static List<BaseDeviceInfo> ALL_DEVICCE_INFOS = new List<BaseDeviceInfo>()
+        {
+            { new BaseDeviceInfo("系统信息","",                      LoadSysBasicInfo,        null,                                   "dataGrid1") },
+            { new BaseDeviceInfo("CPU","Win32_Processor",           LoadCpuInfo,          CpuInfoDictName,           "dataGrid2") },
+            { new BaseDeviceInfo("显卡","Win32_VideoController",     LoadVideoInfo,        VideoInfoDictName,        "dataGrid3") },
+            { new BaseDeviceInfo("键盘","Win32_Keyboard",            LoadKeyboardInfo,     KeyboardInfoDictName,     "dataGrid4") },
+        };
+
+
+        public static Dictionary<string, string> CpuInfoDictName = new Dictionary<string, string>()
+        {
+            {"Name","名称" },
+            {"MaxClockSpeed","最高频率" },
+            {"L2CacheSize","L2缓存" },
+            {"L3CacheSize","L3缓存" },
+            {"Manufacturer","制造商" },
+            {"NumberOfCores","内核" },
+            {"NumberOfEnabledCore","已启用的内核数" },
+            {"NumberOfLogicalProcessors","逻辑处理器" },
+            {"VirtualizationFirmwareEnabled","虚拟化固件" },
+            {"VMMonitorModeExtensions","VM监视器模式扩展" },
+            {"AddressWidth","地址宽度" },
+            {"Caption","标题" },
+            {"DataWidth","数据宽度" },
+            {"CurrentVoltage","当前电压" },
+            {"DeviceID","设备ID" },
+            {"ProcessorId","产品ID" },
+            {"PowerManagementSupported","是否支持电源管理" },
+        };
+
+        public static Dictionary<string, string> VideoInfoDictName = new Dictionary<string, string>()
+        {
+            {"Name","名称" },
+            {"AdapterRAM","显存大小" },
+            {"CurrentHorizontalResolution","水平分辨率" },
+            {"CurrentVerticalResolution","垂直分辨率" },
+            {"CurrentNumberOfColors","当前颜色数目" },
+            {"CurrentBitsPerPixel","像素流水线" },
+            {"CurrentRefreshRate","当前刷新率" },
+            {"DriverDate","驱动程序日期" },
+            {"DriverVersion","驱动程序版本" },
+            {"InstalledDisplayDrivers","已安装的驱动路径" },
+            {"MaxRefreshRate","最高刷新率" },
+            {"MinRefreshRate","最低刷新率" },
+            {"Caption","标题" },
+            {"DeviceID","设备ID" },
+            {"PNPDeviceID","产品ID" },
+            {"VideoArchitecture","串流多重处理器" },
+        };
+
+
+        public static Dictionary<string, string> KeyboardInfoDictName = new Dictionary<string, string>()
+        {
+            {"Name","名称" },
+            {"NumberOfFunctionKeys","功能键数目" },
+            {"DeviceID","设备ID" },
+            {"PNPDeviceID","产品ID" },
+            {"Layout","Layout" },
+        };
+
+        public async void PrintAllSysInfo()
+        {
+            string filepath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "sysinfo.txt");
+            long len = WIN32_CLASSES.Length;
+            for (int i = 0; i < len; i++)
+            {
+                string item = WIN32_CLASSES[i];
+                Console.WriteLine($"{i + 1}/{len} {Math.Round(100 * ((double)i + 1) / (double)len, 2)}% {item}");
+                Dictionary<string, object> dictionary = await DeviceInformation(item);
+                if (dictionary != null)
+                {
+                    StringBuilder builder = new StringBuilder();
+                    builder.Append($"{Environment.NewLine}===== {item} ====={Environment.NewLine}");
+                    foreach (string key in dictionary.Keys)
+                    {
+                        builder.Append($"{key.PadRight(50)} => {dictionary[key]}{Environment.NewLine}");
+                    }
+                    builder.Append($"===== {item} ====={Environment.NewLine}{Environment.NewLine}");
+                    FileHelper.TryAppendToFile(filepath, builder.ToString());
+                }
+
+            }
+        }
+
+        public void PrintDeviceInfo(string title, Dictionary<string, object> dict)
+        {
+            Console.WriteLine($"========== {title} ==========");
+            foreach (var key in dict.Keys)
+            {
+                Console.WriteLine($"{key.PadRight(10)} = {dict[key]}");
+            }
+            Console.WriteLine($"========== {title} ==========");
+        }
+
+
+        private static async Task<Dictionary<string, object>> DeviceInformation(string stringIn)
+        {
+            return await Task.Run(() =>
+            {
+                Dictionary<string, object> result = new Dictionary<string, object>();
+                try
+                {
+                    ManagementClass managementClass = new ManagementClass(stringIn);
+                    //Create a ManagementObjectCollection to loop through
+                    ManagementObjectCollection ManagemenobjCol = managementClass.GetInstances();
+                    //Get the properties in the class
+                    PropertyDataCollection properties = managementClass.Properties;
+                    foreach (ManagementObject obj in ManagemenobjCol)
+                    {
+                        foreach (PropertyData property in properties)
+                        {
+                            try
+                            {
+                                if (obj.Properties[property.Name].Value != null)
+                                    result.Add(property.Name, obj.Properties[property.Name].Value.ToString());
+                                else
+                                    result.Add(property.Name, "[NULL]");
+                            }
+                            catch
+                            {
+                                //Add codes to manage more informations
+                            }
+                        }
+                    }
+                }
+                catch
+                {
+                    //Win 32 Classes Which are not defined on client system
+                }
+                return result;
+            });
+        }
+
+
+        private static async Task<Dictionary<string, object>> LoadSysBasicInfo(Dictionary<string, string> dictName)
+        {
+            return await Task.Run(() =>
+            {
+                Dictionary<string, object> result = new Dictionary<string, object>();
+                result.Add("操作系统", Environment.OSVersion);
+                if (Environment.Is64BitOperatingSystem)
+                    result.Add("位数", "64");
+                else
+                    result.Add("位数", "32");
+                result.Add("系统文件夹", Environment.SystemDirectory);
+                result.Add("逻辑处理器", Environment.ProcessorCount);
+                result.Add("登陆域", Environment.UserDomainName);
+                result.Add("用户名", Environment.UserName);
+                result.Add("计算机名称", Environment.MachineName);
+                result.Add("系统页大小", Environment.SystemPageSize);
+                result.Add("用户交互模式", Environment.UserInteractive);
+                result.Add(".Net 版本", Environment.Version);
+                //DeviceInfoDict.Add("物理内存", Environment.WorkingSet);
+                var timespan = TimeSpan.FromMilliseconds(Environment.TickCount);
+                result.Add("系统运行时间", DateHelper.ToReadableTime((long)timespan.TotalMilliseconds));
+                return result;
+            });
+        }
+
+        public static async Task<List<DriverInfo>> LoadDiskInfo()
+        {
+            return await Task.Run(() =>
+            {
+                List<DriverInfo> result = new List<DriverInfo>();
+                //Drives
+                foreach (System.IO.DriveInfo info in System.IO.DriveInfo.GetDrives())
+                {
+                    try
+                    {
+                        DriverInfo driverInfo = new DriverInfo();
+                        driverInfo.Name = info.Name.Replace(":\\", "");
+                        driverInfo.VolumeLabel = info.VolumeLabel;
+                        driverInfo.DriveType = info.DriveType;
+                        driverInfo.DriveFormat = info.DriveFormat;
+                        driverInfo.TotalSize = info.TotalSize;
+                        driverInfo.AvailableFreeSpace = info.AvailableFreeSpace;
+                        driverInfo.TotalFreeSpace = info.TotalFreeSpace;
+                        driverInfo.UsedSpace = info.TotalSize - info.AvailableFreeSpace;
+                        driverInfo.RootDirectory = info.RootDirectory.FullName;
+                        result.Add(driverInfo);
+                    }
+                    catch
+                    {
+                    }
+                }
+                return result;
+            });
+
+        }
+
+        public static async Task<Dictionary<string, object>> LoadCpuInfo(Dictionary<string, string> dictName)
+        {
+            //if (CpuInfoDict != null) return true;
+            Dictionary<string, object> dictionary = await DeviceInformation("Win32_Processor");
+            Dictionary<string, object> result = new Dictionary<string, object>();
+            foreach (string key in dictName.Keys)
+            {
+                if (dictionary.ContainsKey(key))
+                {
+                    if (key.Equals("MaxClockSpeed"))
+                    {
+                        result.Add(dictName[key], $"{dictionary[key]} MHz");
+                    }
+                    else if ((key.Equals("L2CacheSize") || key.Equals("L3CacheSize")) && dictionary[key] != null)
+                    {
+                        double.TryParse(dictionary[key].ToString(), out double value);
+                        result.Add(dictName[key], $"{value / 1024} MB");
+                    }
+                    else if (key.Equals("CurrentVoltage") || key.Equals("L3CacheSize"))
+                    {
+                        result.Add(dictName[key], $"{dictionary[key]} V");
+                    }
+                    else
+                    {
+                        result.Add(dictName[key], dictionary[key]);
+                    }
+                }
+            }
+
+            return result;
+        }
+        public static async Task<Dictionary<string, object>> LoadVideoInfo(Dictionary<string, string> dictName)
+        {
+            Dictionary<string, object> dictionary = await DeviceInformation("Win32_VideoController");
+            Dictionary<string, object> result = new Dictionary<string, object>();
+            foreach (string key in dictName.Keys)
+            {
+                if (dictionary.ContainsKey(key))
+                {
+                    if (key.Equals("InstalledDisplayDrivers") && dictionary[key] != null)
+                    {
+                        result.Add(dictName[key], $"{dictionary[key].ToString().Replace(",", Environment.NewLine)}");
+                    }
+                    else if (key.Equals("AdapterRAM") && dictionary[key] != null)
+                    {
+                        long.TryParse(dictionary[key].ToString(), out long value);
+                        result.Add(dictName[key], $"{value.ToProperFileSize()}");
+                    }
+                    else if (key.Equals("DriverDate") && dictionary[key] != null)
+                    {
+                        result.Add(dictName[key], $"{dictionary[key].ToString().Substring(0, "20220721".Length)}");
+                    }
+                    else
+                    {
+                        result.Add(dictName[key], dictionary[key]);
+                    }
+                }
+            }
+
+            return result;
+        }
+        public static async Task<Dictionary<string, object>> LoadKeyboardInfo(Dictionary<string, string> dictName)
+        {
+            Dictionary<string, object> dictionary = await DeviceInformation("Win32_Keyboard");
+            Dictionary<string, object> result = new Dictionary<string, object>();
+            foreach (string key in dictName.Keys)
+            {
+                if (dictionary.ContainsKey(key))
+                {
+                    result.Add(dictName[key], dictionary[key]);
+
+                }
+            }
+
+            return result;
+        }
+
+
+
+        /// <summary>
+        /// 名称
+        /// </summary>
+        public string Name { get; set; }
+        public string Win32Name { get; set; }
+
+
+        /// <summary>
+        /// 数据以字典形式存储
+        /// </summary>
+        public Dictionary<string, object> ValueDict { get; set; }
+
+
+        /// <summary>
+        /// 英文到中文转换规则
+        /// </summary>
+        public Dictionary<string, string> InfoDictName { get; set; }
+
+        public Func<Dictionary<string, string>, Task<Dictionary<string, object>>> HandleAction { get; set; }
+
+        private System.Windows.Controls.DataGrid DataGrid { get; set; }
+
+        public string DataGridName { get; set; }
+
+
+        public BaseDeviceInfo(string name, string win32Name, Func<Dictionary<string, string>, Task<Dictionary<string, object>>> handleAction,
+            Dictionary<string, string> infoDictName, string dataGridName)
+        {
+            Name = name;
+            InfoDictName = infoDictName;
+            Win32Name = win32Name;
+            HandleAction = handleAction;
+            DataGridName = dataGridName;
+        }
+
+        /// <summary>
+        /// 注释的获取失败
+        /// </summary>
+        static string[] WIN32_CLASSES =
+        {
+            "Win32_1394Controller",
+            "Win32_1394ControllerDevice",
+            //"Win32_AccountSID",
+            //"Win32_ActionCheck",
+            "Win32_ActiveRoute",
+            "Win32_AllocatedResource",
+            "Win32_ApplicationCommandLine",
+            "Win32_ApplicationService",
+            "Win32_AssociatedBattery",
+            "Win32_AssociatedProcessorMemory",
+            "Win32_AutochkSetting",
+            "Win32_BaseBoard",
+            "Win32_Battery",
+            //"Win32_Binary",
+            "Win32_BindImageAction",
+            "Win32_BIOS",
+            "Win32_BootConfiguration",
+            "Win32_Bus"+
+            "Win32_CacheMemory",
+            "Win32_CDROMDrive",
+            //"Win32_CheckCheck",
+            "Win32_CIMLogicalDeviceCIMDataFile",
+            //"Win32_ClassicCOMApplicationClasses",
+            //"Win32_ClassicCOMClass",
+            //"Win32_ClassicCOMClassSetting",
+            //"Win32_ClassicCOMClassSettings",
+            "Win32_ClassInforAction",
+            "Win32_ClientApplicationSetting",
+            "Win32_CodecFile",
+            "Win32_COMApplicationSettings",
+            "Win32_COMClassAutoEmulator",
+            "Win32_ComClassEmulator",
+            //"Win32_CommandLineAccess",
+            "Win32_ComponentCategory",
+            "Win32_ComputerSystem",
+            "Win32_ComputerSystemProcessor",
+            "Win32_ComputerSystemProduct",
+            "Win32_ComputerSystemWindowsProductActivationSetting",
+            //"Win32_Condition",
+            "Win32_ConnectionShare",
+            "Win32_ControllerHastHub",
+            //"Win32_CreateFolderAction",
+            "Win32_CurrentProbe",
+            "Win32_DCOMApplication",
+            "Win32_DCOMApplicationAccessAllowedSetting",
+            "Win32_DCOMApplicationLaunchAllowedSetting",
+            //"Win32_DCOMApplicationSetting",
+            "Win32_DependentService",
+            "Win32_Desktop",
+            "Win32_DesktopMonitor",
+            "Win32_DeviceBus",
+            "Win32_DeviceMemoryAddress",
+            //"Win32_Directory",
+            //"Win32_DirectorySpecification",
+            "Win32_DiskDrive",
+            "Win32_DiskDrivePhysicalMedia",
+            "Win32_DiskDriveToDiskPartition",
+            "Win32_DiskPartition",
+            "Win32_DiskQuota",
+            "Win32_DisplayConfiguration",
+            "Win32_DisplayControllerConfiguration",
+            "Win32_DMAChanner",
+            "Win32_DriverForDevice",
+            "Win32_DriverVXD",
+            //"Win32_DuplicateFileAction",
+            "Win32_Environment",
+            //"Win32_EnvironmentSpecification",
+            //"Win32_ExtensionInfoAction",
+            "Win32_Fan",
+            //"Win32_FileSpecification",
+            "Win32_FloppyController",
+            "Win32_FloppyDrive",
+            "Win32_FontInfoAction",
+            "Win32_Group",
+            "Win32_GroupDomain",
+            "Win32_GroupUser",
+            "Win32_HeatPipe",
+            "Win32_IDEController",
+            "Win32_IDEControllerDevice",
+            //"Win32_ImplementedCategory",
+            "Win32_InfraredDevice",
+            "Win32_IniFileSpecification",
+            //"Win32_InstalledSoftwareElement",
+            "Win32_IP4PersistedRouteTable",
+            "Win32_IP4RouteTable",
+            //"Win32_IRQResource",
+            "Win32_Keyboard",
+            //"Win32_LaunchCondition",
+            "Win32_LoadOrderGroup",
+            "Win32_LoadOrderGroupServiceDependencies",
+            "Win32_LoadOrderGroupServiceMembers",
+            "Win32_LocalTime",
+            "Win32_LoggedOnUser",
+            "Win32_LogicalDisk",
+            "Win32_LogicalDiskRootDirectory",
+            "Win32_LogicalDiskToPartition",
+            "Win32_LogicalFileAccess",
+            "Win32_LogicalFileAuditing",
+            "Win32_LogicalFileGroup",
+            "Win32_LogicalFileOwner",
+            "Win32_LogicalFileSecuritySetting",
+            "Win32_LogicalMemoryConfiguration",
+            "Win32_LogicalProgramGroup",
+            "Win32_LogicalProgramGroupDirectory",
+            "Win32_LogicalProgramGroupItem",
+            "Win32_LogicalProgramGroupItemDataFile",
+            "Win32_LogicalShareAccess",
+            "Win32_LogicalShareAuditing",
+            "Win32_LogicalShareSecuritySetting",
+            "Win32_LogonSession",
+            "Win32_LogonSessionMappedDisk",
+            "Win32_MappedLogicalDisk",
+            "Win32_MemoryArray",
+            "Win32_MemoryArrayLocation",
+            "Win32_MemoryDevice",
+            "Win32_MemoryDeviceArray",
+            "Win32_MemoryDeviceLocation",
+            "Win32_MIMEInfoAction",
+            "Win32_MotherboardDevice",
+            "Win32_MoveFileAction",
+            "Win32_NamedJobObject",
+            "Win32_NamedJobObjectActgInfo",
+            "Win32_NamedJobObjectLimit",
+            "Win32_NamedJobObjectLimitSetting",
+            "Win32_NamedJobObjectProcess",
+            "Win32_NamedJobObjectSecLimit",
+            "Win32_NamedJobObjectSecLimitSetting",
+            "Win32_NamedJobObjectStatistics",
+            "Win32_NetworkAdapter",
+            "Win32_NetworkAdapterConfiguration",
+            "Win32_NetworkAdapterSetting",
+            "Win32_NetworkClient",
+            "Win32_NetworkConnection",
+            "Win32_NetworkLoginProfile",
+            "Win32_NetworkProtocol",
+            "Win32_NTDomain",
+            "Win32_NTEventlogFile",
+            //"Win32_NTLogEvent",
+            //"Win32_NTLogEventComputer",
+            //"Win32_NTLogEvnetLog",
+            //"Win32_NTLogEventUser",
+            "Win32_ODBCAttribute",
+            "Win32_ODBCDataSourceAttribute",
+            "Win32_ODBCDataSourceSpecification",
+            "Win32_ODBCDriverAttribute",
+            "Win32_ODBCDriverSoftwareElement",
+            "Win32_ODBCDriverSpecification",
+            "Win32_ODBCSourceAttribute",
+            "Win32_ODBCTranslatorSpecification",
+            "Win32_OnBoardDevice",
+            "Win32_OperatingSystem",
+            "Win32_OperatingSystemAutochkSetting",
+            "Win32_OperatingSystemQFE",
+            "Win32_OSRecoveryConfiguration",
+            "Win32_PageFile",
+            "Win32_PageFileElementSetting",
+            "Win32_PageFileSetting",
+            "Win32_PageFileUsage",
+            "Win32_ParallelPort",
+            "Win32_Patch",
+            "Win32_PatchFile",
+            "Win32_PatchPackage",
+            "Win32_PCMCIAControler",
+            "Win32_PerfFormattedData_ASP_ActiveServerPages",
+            "Win32_PerfFormattedData_ASPNET_114322_ASPNETAppsv114322",
+            "Win32_PerfFormattedData_ASPNET_114322_ASPNETv114322",
+            "Win32_PerfFormattedData_ASPNET_2040607_ASPNETAppsv2040607",
+            "Win32_PerfFormattedData_ASPNET_2040607_ASPNETv2040607",
+            "Win32_PerfFormattedData_ASPNET_ASPNET",
+            "Win32_PerfFormattedData_ASPNET_ASPNETApplications",
+            "Win32_PerfFormattedData_aspnet_state_ASPNETStateService",
+            "Win32_PerfFormattedData_ContentFilter_IndexingServiceFilter",
+            "Win32_PerfFormattedData_ContentIndex_IndexingService",
+            "Win32_PerfFormattedData_DTSPipeline_SQLServerDTSPipeline",
+            "Win32_PerfFormattedData_Fax_FaxServices",
+            "Win32_PerfFormattedData_InetInfo_InternetInformationServicesGlobal",
+            "Win32_PerfFormattedData_ISAPISearch_HttpIndexingService",
+            "Win32_PerfFormattedData_MSDTC_DistributedTransactionCoordinator",
+            "Win32_PerfFormattedData_NETCLRData_NETCLRData",
+            "Win32_PerfFormattedData_NETCLRNetworking_NETCLRNetworking",
+            "Win32_PerfFormattedData_NETDataProviderforOracle_NETCLRData",
+            "Win32_PerfFormattedData_NETDataProviderforSqlServer_NETDataProviderforSqlServer",
+            "Win32_PerfFormattedData_NETFramework_NETCLRExceptions",
+            "Win32_PerfFormattedData_NETFramework_NETCLRInterop",
+            "Win32_PerfFormattedData_NETFramework_NETCLRJit",
+            "Win32_PerfFormattedData_NETFramework_NETCLRLoading",
+            "Win32_PerfFormattedData_NETFramework_NETCLRLocksAndThreads",
+            "Win32_PerfFormattedData_NETFramework_NETCLRMemory",
+            "Win32_PerfFormattedData_NETFramework_NETCLRRemoting",
+            "Win32_PerfFormattedData_NETFramework_NETCLRSecurity",
+            "Win32_PerfFormattedData_NTFSDRV_ControladordealmacenamientoNTFSdeSMTP",
+            "Win32_PerfFormattedData_Outlook_Outlook",
+            "Win32_PerfFormattedData_PerfDisk_LogicalDisk",
+            "Win32_PerfFormattedData_PerfDisk_PhysicalDisk",
+            "Win32_PerfFormattedData_PerfNet_Browser",
+            "Win32_PerfFormattedData_PerfNet_Redirector",
+            "Win32_PerfFormattedData_PerfNet_Server",
+            "Win32_PerfFormattedData_PerfNet_ServerWorkQueues",
+            "Win32_PerfFormattedData_PerfOS_Cache",
+            "Win32_PerfFormattedData_PerfOS_Memory",
+            "Win32_PerfFormattedData_PerfOS_Objects",
+            "Win32_PerfFormattedData_PerfOS_PagingFile",
+            "Win32_PerfFormattedData_PerfOS_Processor",
+            "Win32_PerfFormattedData_PerfOS_System",
+            "Win32_PerfFormattedData_PerfProc_FullImage_Costly",
+            "Win32_PerfFormattedData_PerfProc_Image_Costly",
+            "Win32_PerfFormattedData_PerfProc_JobObject",
+            "Win32_PerfFormattedData_PerfProc_JobObjectDetails",
+            //"Win32_PerfFormattedData_PerfProc_Process",
+            //"Win32_PerfFormattedData_PerfProc_ProcessAddressSpace_Costly",
+            //"Win32_PerfFormattedData_PerfProc_Thread",
+            //"Win32_PerfFormattedData_PerfProc_ThreadDetails_Costly",
+            "Win32_PerfFormattedData_RemoteAccess_RASPort",
+            "Win32_PerfFormattedData_RemoteAccess_RASTotal",
+            "Win32_PerfFormattedData_RSVP_RSVPInterfaces",
+            "Win32_PerfFormattedData_RSVP_RSVPService",
+            "Win32_PerfFormattedData_Spooler_PrintQueue",
+            "Win32_PerfFormattedData_TapiSrv_Telephony",
+            "Win32_PerfFormattedData_Tcpip_ICMP",
+            "Win32_PerfFormattedData_Tcpip_IP",
+            "Win32_PerfFormattedData_Tcpip_NBTConnection",
+            "Win32_PerfFormattedData_Tcpip_NetworkInterface",
+            "Win32_PerfFormattedData_Tcpip_TCP",
+            "Win32_PerfFormattedData_Tcpip_UDP",
+            "Win32_PerfFormattedData_TermService_TerminalServices",
+            "Win32_PerfFormattedData_TermService_TerminalServicesSession",
+            "Win32_PerfFormattedData_W3SVC_WebService",
+            "Win32_PerfRawData_ASP_ActiveServerPages",
+            "Win32_PerfRawData_ASPNET_114322_ASPNETAppsv114322",
+            "Win32_PerfRawData_ASPNET_114322_ASPNETv114322",
+            "Win32_PerfRawData_ASPNET_2040607_ASPNETAppsv2040607",
+            "Win32_PerfRawData_ASPNET_2040607_ASPNETv2040607",
+            "Win32_PerfRawData_ASPNET_ASPNET",
+            "Win32_PerfRawData_ASPNET_ASPNETApplications",
+            "Win32_PerfRawData_aspnet_state_ASPNETStateService",
+            "Win32_PerfRawData_ContentFilter_IndexingServiceFilter",
+            "Win32_PerfRawData_ContentIndex_IndexingService",
+            "Win32_PerfRawData_DTSPipeline_SQLServerDTSPipeline",
+            "Win32_PerfRawData_Fax_FaxServices",
+            "Win32_PerfRawData_InetInfo_InternetInformationServicesGlobal",
+            "Win32_PerfRawData_ISAPISearch_HttpIndexingService",
+            "Win32_PerfRawData_MSDTC_DistributedTransactionCoordinator",
+            "Win32_PerfRawData_NETCLRData_NETCLRData",
+            "Win32_PerfRawData_NETCLRNetworking_NETCLRNetworking",
+            "Win32_PerfRawData_NETDataProviderforOracle_NETCLRData",
+            "Win32_PerfRawData_NETDataProviderforSqlServer_NETDataProviderforSqlServer",
+            "Win32_PerfRawData_NETFramework_NETCLRExceptions",
+            "Win32_PerfRawData_NETFramework_NETCLRInterop",
+            "Win32_PerfRawData_NETFramework_NETCLRJit",
+            "Win32_PerfRawData_NETFramework_NETCLRLoading",
+            "Win32_PerfRawData_NETFramework_NETCLRLocksAndThreads",
+            "Win32_PerfRawData_NETFramework_NETCLRMemory",
+            "Win32_PerfRawData_NETFramework_NETCLRRemoting",
+            "Win32_PerfRawData_NETFramework_NETCLRSecurity",
+            "Win32_PerfRawData_NTFSDRV_ControladordealmacenamientoNTFSdeSMTP",
+            "Win32_PerfRawData_Outlook_Outlook",
+            "Win32_PerfRawData_PerfDisk_LogicalDisk",
+            "Win32_PerfRawData_PerfDisk_PhysicalDisk",
+            "Win32_PerfRawData_PerfNet_Browser",
+            "Win32_PerfRawData_PerfNet_Redirector",
+            "Win32_PerfRawData_PerfNet_Server",
+            "Win32_PerfRawData_PerfNet_ServerWorkQueues",
+            "Win32_PerfRawData_PerfOS_Cache",
+            "Win32_PerfRawData_PerfOS_Memory",
+            "Win32_PerfRawData_PerfOS_Objects",
+            "Win32_PerfRawData_PerfOS_PagingFile",
+            "Win32_PerfRawData_PerfOS_Processor",
+            "Win32_PerfRawData_PerfOS_System",
+            "Win32_PerfRawData_PerfProc_FullImage_Costly",
+            "Win32_PerfRawData_PerfProc_Image_Costly",
+            "Win32_PerfRawData_PerfProc_JobObject",
+            "Win32_PerfRawData_PerfProc_JobObjectDetails",
+            //"Win32_PerfRawData_PerfProc_Process",
+            //"Win32_PerfRawData_PerfProc_ProcessAddressSpace_Costly",
+            //"Win32_PerfRawData_PerfProc_Thread",
+            //"Win32_PerfRawData_PerfProc_ThreadDetails_Costly",
+            "Win32_PerfRawData_RemoteAccess_RASPort",
+            "Win32_PerfRawData_RemoteAccess_RASTotal",
+            "Win32_PerfRawData_RSVP_RSVPInterfaces",
+            "Win32_PerfRawData_RSVP_RSVPService",
+            "Win32_PerfRawData_Spooler_PrintQueue",
+            "Win32_PerfRawData_TapiSrv_Telephony",
+            "Win32_PerfRawData_Tcpip_ICMP",
+            "Win32_PerfRawData_Tcpip_IP",
+            "Win32_PerfRawData_Tcpip_NBTConnection",
+            "Win32_PerfRawData_Tcpip_NetworkInterface",
+            "Win32_PerfRawData_Tcpip_TCP",
+            "Win32_PerfRawData_Tcpip_UDP",
+            "Win32_PerfRawData_TermService_TerminalServices",
+            "Win32_PerfRawData_TermService_TerminalServicesSession",
+            "Win32_PerfRawData_W3SVC_WebService",
+            "Win32_PhysicalMedia",
+            "Win32_PhysicalMemory",
+            "Win32_PhysicalMemoryArray",
+            "Win32_PhysicalMemoryLocation",
+            "Win32_PingStatus",
+            "Win32_PNPAllocatedResource",
+            "Win32_PnPDevice",
+            //"Win32_PnPEntity",
+            //"Win32_PnPSignedDriver",
+            //"Win32_PnPSignedDriverCIMDataFile",
+            "Win32_PointingDevice",
+            "Win32_PortableBattery",
+            "Win32_PortConnector",
+            "Win32_PortResource",
+            "Win32_POTSModem",
+            "Win32_POTSModemToSerialPort",
+            "Win32_Printer",
+            "Win32_PrinterConfiguration",
+            "Win32_PrinterController",
+            "Win32_PrinterDriver",
+            "Win32_PrinterDriverDll",
+            "Win32_PrinterSetting",
+            "Win32_PrinterShare",
+            "Win32_PrintJob",
+            //"Win32_Process",
+            "Win32_Processor",
+            //"Win32_Product",
+            "Win32_ProductCheck",
+            //"Win32_ProductResource",
+            //"Win32_ProductSoftwareFeatures",
+            "Win32_ProgIDSpecification",
+            "Win32_ProgramGroup",
+            "Win32_ProgramGroupContents",
+            //"Win32_Property",
+            "Win32_ProtocolBinding",
+            "Win32_Proxy",
+            "Win32_PublishComponentAction",
+            "Win32_QuickFixEngineering",
+            "Win32_QuotaSetting",
+            "Win32_Refrigeration",
+            "Win32_Registry",
+            //"Win32_RegistryAction",
+            //"Win32_RemoveFileAction",
+            //"Win32_RemoveIniAction",
+            "Win32_ReserveCost",
+            "Win32_ScheduledJob",
+            //"Win32_SCSIController",
+            "Win32_SCSIControllerDevice",
+            //"Win32_SecuritySettingOfLogicalFile",
+            //"Win32_SecuritySettingOfLogicalShare",
+            //"Win32_SelfRegModuleAction",
+            "Win32_SerialPort",
+            "Win32_SerialPortConfiguration",
+            "Win32_SerialPortSetting",
+            "Win32_ServerConnection",
+            "Win32_ServerSession",
+            //"Win32_Service",
+            //"Win32_ServiceControl",
+            //"Win32_ServiceSpecification",
+            //"Win32_ServiceSpecificationService",
+            "Win32_SessionConnection",
+            "Win32_SessionProcess",
+            "Win32_Share",
+            "Win32_ShareToDirectory",
+            //"Win32_ShortcutAction",
+            //"Win32_ShortcutFile",
+            //"Win32_ShortcutSAP",
+            "Win32_SID",
+            //"Win32_SoftwareElement",
+            //"Win32_SoftwareElementAction",
+            //"Win32_SoftwareElementCheck",
+            //"Win32_SoftwareElementCondition",
+            //"Win32_SoftwareElementResource",
+            //"Win32_SoftwareFeature",
+            //"Win32_SoftwareFeatureAction",
+            //"Win32_SoftwareFeatureCheck",
+            //"Win32_SoftwareFeatureParent",
+            //"Win32_SoftwareFeatureSoftwareElements",
+            "Win32_SoundDevice",
+            "Win32_StartupCommand",
+            //"Win32_SubDirectory",
+            "Win32_SystemAccount",
+            "Win32_SystemBIOS",
+            "Win32_SystemBootConfiguration",
+            "Win32_SystemDesktop",
+            "Win32_SystemDevices",
+            //"Win32_SystemDriver",
+            //"Win32_SystemDriverPNPEntity",
+            "Win32_SystemEnclosure",
+            "Win32_SystemLoadOrderGroups",
+            "Win32_SystemLogicalMemoryConfiguration",
+            "Win32_SystemNetworkConnections",
+            "Win32_SystemOperatingSystem",
+            "Win32_SystemPartitions",
+            "Win32_SystemProcesses",
+            "Win32_SystemProgramGroups",
+            "Win32_SystemResources",
+            "Win32_SystemServices",
+            "Win32_SystemSlot",
+            "Win32_SystemSystemDriver",
+            "Win32_SystemTimeZone",
+            "Win32_SystemUsers",
+            "Win32_TapeDrive",
+            "Win32_TCPIPPrinterPort",
+            "Win32_TemperatureProbe",
+            "Win32_Terminal",
+            "Win32_TerminalService",
+            "Win32_TerminalServiceSetting",
+            "Win32_TerminalServiceToSetting",
+            "Win32_TerminalTerminalSetting",
+            //"Win32_Thread",
+            "Win32_TimeZone",
+            "Win32_TSAccount",
+            "Win32_TSClientSetting",
+            "Win32_TSEnvironmentSetting",
+            "Win32_TSGeneralSetting",
+            "Win32_TSLogonSetting",
+            "Win32_TSNetworkAdapterListSetting",
+            "Win32_TSNetworkAdapterSetting",
+            "Win32_TSPermissionsSetting",
+            "Win32_TSRemoteControlSetting",
+            "Win32_TSSessionDirectory",
+            "Win32_TSSessionDirectorySetting",
+            "Win32_TSSessionSetting",
+            //"Win32_TypeLibraryAction",
+            "Win32_UninterruptiblePowerSupply",
+            "Win32_USBController",
+            "Win32_USBControllerDevice",
+            "Win32_USBHub",
+            "Win32_UserAccount",
+            "Win32_UserDesktop",
+            "Win32_UserInDomain",
+            "Win32_UTCTime",
+            "Win32_VideoController",
+            "Win32_VideoSettings",
+            "Win32_VoltageProbe",
+            "Win32_VolumeQuotaSetting",
+            "Win32_WindowsProductActivation",
+            "Win32_WMIElementSetting",
+            "Win32_WMISetting"
+        };
+
+
+    }
+
+}
