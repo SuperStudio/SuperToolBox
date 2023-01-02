@@ -2,46 +2,340 @@
     x:Class="SuperToolBox.ToolPages.Encrypt"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
+    xmlns:converter="clr-namespace:SuperUtils.Converter;assembly=SuperUtils"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:SuperToolBox.ToolPages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:super="https://github.com/SuperStudio/SuperControls"
     Title="Encrypt"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
 
+    <Page.Resources>
+        <converter:BoolToOppositeVisibilityConverter x:Key="BoolToOppositeVisibilityConverter" />
+    </Page.Resources>
+
     <Grid>
         <StackPanel Orientation="Vertical">
-            <Border
-                Margin="5"
-                Padding="5"
-                Background="{DynamicResource Window.Side.Background}"
-                CornerRadius="2">
-                <TextBlock
-                    HorizontalAlignment="Left"
-                    Style="{StaticResource BaseTextBlock}"
-                    Text="计算 MD5" />
-            </Border>
             <TabControl
                 Margin="5"
+                Background="Transparent"
                 ItemContainerStyle="{StaticResource FlatTabItem}"
                 Style="{StaticResource FlatTabControl}">
-                <TabItem Header="字符串" />
-                <TabItem Header="文件" />
-                <TabItem Header="文件夹" />
-                <TabItem Header="批量文件" />
+                <TabItem Header="计算哈希值">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <StackPanel
+                            Grid.Row="0"
+                            Margin="10"
+                            Orientation="Horizontal">
+                            <RadioButton
+                                Name="stringRadioButton"
+                                HorizontalAlignment="Left"
+                                Content="字符串"
+                                GroupName="NormalRadioButton"
+                                IsChecked="True"
+                                Style="{StaticResource NormalRadioButton}" />
+                            <RadioButton
+                                HorizontalAlignment="Left"
+                                Content="文件"
+                                GroupName="NormalRadioButton"
+                                Style="{StaticResource NormalRadioButton}" />
+                        </StackPanel>
+                        <Border
+                            Grid.Row="1"
+                            Background="{DynamicResource Window.Side.Background}"
+                            Style="{StaticResource InfoBorder}"
+                            Visibility="{Binding ElementName=stringRadioButton, Path=IsChecked, Converter={StaticResource bool2VisibilityConverter}}">
+
+                            <StackPanel Orientation="Vertical">
+
+
+
+                                <Border Margin="10,5" Style="{StaticResource InfoBorder}">
+                                    <TextBox
+                                        x:Name="md5OriginTextBlock"
+                                        MinHeight="100"
+                                        MaxHeight="200"
+                                        Margin="0,3"
+                                        HorizontalAlignment="Stretch"
+                                        VerticalContentAlignment="Top"
+                                        Background="Transparent"
+                                        Style="{StaticResource BaseTextBox}"
+                                        Text="123"
+                                        TextWrapping="Wrap" />
+                                </Border>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <Button
+                                        Margin="10"
+                                        HorizontalAlignment="Left"
+                                        Click="CalcStringMd5"
+                                        Content="计算"
+                                        Style="{StaticResource ButtonPrimary}" />
+                                    <ComboBox
+                                        x:Name="stringComboBox"
+                                        MinWidth="100"
+                                        VerticalAlignment="Center"
+                                        Background="{DynamicResource Window.Title.Background}"
+                                        ItemContainerStyle="{StaticResource NormalListBoxItem}"
+                                        SelectedIndex="0"
+                                        SelectionChanged="stringComboBox_SelectionChanged"
+                                        Style="{StaticResource BorderComboBox}">
+                                        <ComboBoxItem Content="MD5" />
+                                        <ComboBoxItem Content="SHA1" />
+                                        <ComboBoxItem Content="SHA256" />
+                                        <ComboBoxItem Content="SHA384" />
+                                        <ComboBoxItem Content="SHA512" />
+                                    </ComboBox>
+
+
+                                </StackPanel>
+
+
+                                <Button
+                                    Width="25"
+                                    Height="25"
+                                    Margin="10,0"
+                                    Padding="0"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Stretch"
+                                    super:CommonExt.CornerRadius="5"
+                                    super:CommonExt.HoverBackground="{DynamicResource Window.Title.Hover.Background}"
+                                    Click="CopyMd5ResultText"
+                                    Style="{StaticResource FlatButton}">
+                                    <Viewbox Width="auto" Height="14">
+                                        <Path
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Data="M891.072 822.144V167.36a34.432 34.432 0 0 0-34.432-34.432H201.856C201.856 94.848 232.704 64 270.784 64h620.288C929.152 64 960 94.848 960 132.928v620.288c0 38.08-30.848 68.928-68.928 68.928z m-68.928-551.36v620.288c0 38.08-30.848 68.928-68.928 68.928H132.928A68.928 68.928 0 0 1 64 891.072V270.784c0-38.08 30.848-68.928 68.928-68.928h620.288c38.08 0 68.928 30.848 68.928 68.928z m-137.856 137.856H201.856a34.432 34.432 0 0 0 0 68.864h482.432a34.432 34.432 0 0 0 0-68.864z m0 206.72H201.856a34.432 34.432 0 0 0 0 68.864h482.432a34.432 34.432 0 0 0 0-68.864z"
+                                            Fill="{DynamicResource Window.Foreground}" />
+                                    </Viewbox>
+                                </Button>
+
+                                <Border Margin="10,5" Style="{StaticResource InfoBorder}">
+                                    <TextBox
+                                        x:Name="md5ResultTextBlock"
+                                        Height="auto"
+                                        MinHeight="100"
+                                        HorizontalAlignment="Stretch"
+                                        VerticalContentAlignment="Top"
+                                        Background="Transparent"
+                                        Foreground="{DynamicResource Window.Sub.Foreground}"
+                                        Style="{StaticResource ReadOnlyWrapTextBox}"
+                                        TextAlignment="Left"
+                                        TextWrapping="Wrap" />
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+
+                        <Border
+                            Grid.Row="1"
+                            Background="{DynamicResource Window.Side.Background}"
+                            Style="{StaticResource InfoBorder}"
+                            Visibility="{Binding ElementName=stringRadioButton, Path=IsChecked, Converter={StaticResource BoolToOppositeVisibilityConverter}}">
+                            <StackPanel Orientation="Vertical">
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Button
+                                        MinHeight="30"
+                                        Margin="10"
+                                        BorderBrush="{DynamicResource Button.Selected.BorderBrush}"
+                                        Click="SelectHashFile"
+                                        Content="选择文件"
+                                        Style="{StaticResource BorderButton}" />
+
+                                    <super:SearchBox
+                                        x:Name="hashFilePathTextBlock"
+                                        Grid.Column="1"
+                                        Height="30"
+                                        Padding="3,0"
+                                        BorderBrush="{DynamicResource Button.Selected.BorderBrush}"
+                                        PlaceHolder="文件路径"
+                                        PlaceHolderForeground="{DynamicResource Window.Sub.Foreground}"
+                                        Style="{StaticResource SearchTextBoxStyle}"
+                                        TextPadding="0 0" />
+
+
+                                </Grid>
+
+
+                                <StackPanel Orientation="Horizontal">
+                                    <Button
+                                        Margin="10"
+                                        HorizontalAlignment="Left"
+                                        Click="CalcFileMd5"
+                                        Content="计算"
+                                        Style="{StaticResource ButtonPrimary}" />
+                                    <ComboBox
+                                        x:Name="fileComboBox"
+                                        MinWidth="100"
+                                        VerticalAlignment="Center"
+                                        Background="{DynamicResource Window.Title.Background}"
+                                        ItemContainerStyle="{StaticResource NormalListBoxItem}"
+                                        SelectedIndex="0"
+                                        SelectionChanged="fileComboBox_SelectionChanged"
+                                        Style="{StaticResource BorderComboBox}">
+                                        <ComboBoxItem Content="MD5" />
+                                        <ComboBoxItem Content="SHA1" />
+                                        <ComboBoxItem Content="SHA256" />
+                                        <ComboBoxItem Content="SHA384" />
+                                        <ComboBoxItem Content="SHA512" />
+                                    </ComboBox>
+                                </StackPanel>
+
+
+                                <Button
+                                    Width="25"
+                                    Height="25"
+                                    Margin="10,0"
+                                    Padding="0"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Stretch"
+                                    super:CommonExt.CornerRadius="5"
+                                    super:CommonExt.HoverBackground="{DynamicResource Window.Title.Hover.Background}"
+                                    Click="CopyFileResultText"
+                                    Style="{StaticResource FlatButton}">
+                                    <Viewbox Width="auto" Height="14">
+                                        <Path
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Data="M891.072 822.144V167.36a34.432 34.432 0 0 0-34.432-34.432H201.856C201.856 94.848 232.704 64 270.784 64h620.288C929.152 64 960 94.848 960 132.928v620.288c0 38.08-30.848 68.928-68.928 68.928z m-68.928-551.36v620.288c0 38.08-30.848 68.928-68.928 68.928H132.928A68.928 68.928 0 0 1 64 891.072V270.784c0-38.08 30.848-68.928 68.928-68.928h620.288c38.08 0 68.928 30.848 68.928 68.928z m-137.856 137.856H201.856a34.432 34.432 0 0 0 0 68.864h482.432a34.432 34.432 0 0 0 0-68.864z m0 206.72H201.856a34.432 34.432 0 0 0 0 68.864h482.432a34.432 34.432 0 0 0 0-68.864z"
+                                            Fill="{DynamicResource Window.Foreground}" />
+                                    </Viewbox>
+                                </Button>
+
+                                <Border Margin="10,5" Style="{StaticResource InfoBorder}">
+                                    <TextBox
+                                        x:Name="md5FileResultTextBlock"
+                                        Height="auto"
+                                        MinHeight="100"
+                                        HorizontalAlignment="Stretch"
+                                        VerticalContentAlignment="Top"
+                                        Background="Transparent"
+                                        Foreground="{DynamicResource Window.Sub.Foreground}"
+                                        Style="{StaticResource ReadOnlyWrapTextBox}"
+                                        TextAlignment="Left"
+                                        TextWrapping="Wrap" />
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+
+                    </Grid>
+                </TabItem>
+                <TabItem Header="生成密码">
+                    <StackPanel Orientation="Vertical">
+                        <Button
+                            Margin="10"
+                            HorizontalAlignment="Left"
+                            Click="GenerateRandomPwd"
+                            Content="生成随机密码"
+                            Style="{StaticResource ButtonPrimary}" />
+
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock
+                                Margin="10,0"
+                                Foreground="{DynamicResource Window.Foreground}"
+                                Style="{StaticResource BaseTextBlock}"
+                                Text="长度：" />
+                            <super:Slider
+                                Name="lenSlider"
+                                Width="200"
+                                Margin="10,0"
+                                Maximum="128"
+                                Minimum="1"
+                                Style="{StaticResource NormalSliderStyle}"
+                                Value="20" />
+                            <TextBlock Style="{StaticResource BaseTextBlock}" Text="{Binding ElementName=lenSlider, Path=Value, Mode=OneWay}" />
+                        </StackPanel>
+
+                        <Button
+                            Width="25"
+                            Height="25"
+                            Margin="10,0"
+                            Padding="0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Stretch"
+                            super:CommonExt.CornerRadius="5"
+                            super:CommonExt.HoverBackground="{DynamicResource Window.Title.Hover.Background}"
+                            Click="CopyPwdText"
+                            Style="{StaticResource FlatButton}">
+                            <Viewbox Width="auto" Height="14">
+                                <Path
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Data="M891.072 822.144V167.36a34.432 34.432 0 0 0-34.432-34.432H201.856C201.856 94.848 232.704 64 270.784 64h620.288C929.152 64 960 94.848 960 132.928v620.288c0 38.08-30.848 68.928-68.928 68.928z m-68.928-551.36v620.288c0 38.08-30.848 68.928-68.928 68.928H132.928A68.928 68.928 0 0 1 64 891.072V270.784c0-38.08 30.848-68.928 68.928-68.928h620.288c38.08 0 68.928 30.848 68.928 68.928z m-137.856 137.856H201.856a34.432 34.432 0 0 0 0 68.864h482.432a34.432 34.432 0 0 0 0-68.864z m0 206.72H201.856a34.432 34.432 0 0 0 0 68.864h482.432a34.432 34.432 0 0 0 0-68.864z"
+                                    Fill="{DynamicResource Window.Foreground}" />
+                            </Viewbox>
+                        </Button>
+                        <Border Margin="10,5" Style="{StaticResource InfoBorder}">
+                            <TextBox
+                                x:Name="pwdTextBox"
+                                Height="auto"
+                                MinHeight="100"
+                                HorizontalAlignment="Stretch"
+                                VerticalContentAlignment="Top"
+                                Background="Transparent"
+                                Foreground="{DynamicResource Window.Sub.Foreground}"
+                                Style="{StaticResource ReadOnlyWrapTextBox}"
+                                TextAlignment="Left"
+                                TextWrapping="Wrap" />
+                        </Border>
+
+                    </StackPanel>
+                </TabItem>
+
+                <TabItem Header="DES加密/解密" Visibility="Collapsed">
+                    <Grid VerticalAlignment="Stretch">
+
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Grid.Row="0" Orientation="Vertical">
+                            <DockPanel>
+                                <TextBlock
+                                    MinWidth="70"
+                                    Margin="10"
+                                    DockPanel.Dock="Left"
+                                    Style="{StaticResource BaseTextBlock}"
+                                    Text="RGBKey"
+                                    TextAlignment="Right" />
+                                <super:SearchBox Style="{StaticResource SearchTextBoxStyle}" />
+                            </DockPanel>
+                            <DockPanel>
+                                <TextBlock
+                                    MinWidth="70"
+                                    Margin="10"
+                                    DockPanel.Dock="Left"
+                                    Style="{StaticResource BaseTextBlock}"
+                                    Text="RGBIV"
+                                    TextAlignment="Right" />
+                                <super:SearchBox Style="{StaticResource SearchTextBoxStyle}" />
+                            </DockPanel>
+                        </StackPanel>
+
+
+
+                    </Grid>
+                </TabItem>
+
             </TabControl>
-            <StackPanel Margin="5" Orientation="Horizontal">
-                <TextBlock
-                    Foreground="{DynamicResource Window.Sub.Foreground}"
-                    Style="{StaticResource BaseTextBlock}"
-                    Text="文件名" />
-                <Button
-                    Margin="5"
-                    BorderBrush="{DynamicResource Button.Selected.BorderBrush}"
-                    Content="选择文件"
-                    Style="{StaticResource BorderButton}" />
-            </StackPanel>
+
         </StackPanel>
     </Grid>
 </Page>

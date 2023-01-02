@@ -198,7 +198,7 @@
 
             <StackPanel
                 Grid.Column="1"
-                Margin="20"
+                Margin="100,20,0,20"
                 Orientation="Vertical">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Style="{StaticResource BaseTextBlock}" Text="鼠标位置：" />
@@ -235,6 +235,18 @@
                         </Viewbox>
                     </Button>
                 </StackPanel>
+                <Border
+                    Grid.Row="0"
+                    Margin="10"
+                    HorizontalAlignment="Left"
+                    Style="{StaticResource InfoBorder}">
+                    <TextBlock
+                        HorizontalAlignment="Left"
+                        Foreground="{DynamicResource Window.Sub.Foreground}"
+                        Style="{StaticResource BaseTextBlock}"
+                        Text="设置鼠标位置：鼠标移到指定位置按下 F12，Ctrl + F11 开始运行，Ctrl + F12 停止运行"
+                        TextAlignment="Left" />
+                </Border>
             </StackPanel>
 
         </Grid>
@@ -366,23 +378,13 @@
             <Grid Grid.Column="2">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
 
-                <Border
-                    Grid.Row="0"
-                    Margin="20,10,20,0"
-                    Style="{StaticResource InfoBorder}">
-                    <TextBlock
-                        HorizontalAlignment="Left"
-                        Foreground="{DynamicResource Window.Sub.Foreground}"
-                        Style="{StaticResource BaseTextBlock}"
-                        Text="设置鼠标位置：鼠标移到指定位置按下 F12，Ctrl + F11 开始运行，Ctrl + F12 停止运行" />
-                </Border>
+
                 <StackPanel
-                    Grid.Row="1"
+                    Grid.Row="0"
                     Margin="20,10"
                     Orientation="Horizontal">
                     <Button
@@ -517,7 +519,7 @@
 
                 <DataGrid
                     Name="dataGrid"
-                    Grid.Row="2"
+                    Grid.Row="1"
                     Margin="20,0"
                     HorizontalContentAlignment="Left"
                     CanUserResizeColumns="True"
@@ -720,7 +722,7 @@
                 </DataGrid>
                 <TextBox
                     Name="statusTextBox"
-                    Grid.Row="3"
+                    Grid.Row="2"
                     Height="100"
                     Margin="5,0"
                     Padding="5,2"

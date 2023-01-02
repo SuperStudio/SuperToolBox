@@ -183,6 +183,7 @@
                                     </Grid.ColumnDefinitions>
                                     <TextBlock
                                         Grid.Column="0"
+                                        Margin="4,0"
                                         Style="{StaticResource BaseTextBlock}"
                                         Text="{Binding Name}" />
 
@@ -194,7 +195,7 @@
                                         <Button
                                             Width="20"
                                             Height="20"
-                                            Margin="5"
+                                            Margin="5,0"
                                             HorizontalAlignment="Right"
                                             Click="CloseTabItem"
                                             Style="{StaticResource RoundNormalButton}"
