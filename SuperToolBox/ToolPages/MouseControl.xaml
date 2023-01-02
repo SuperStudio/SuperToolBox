@@ -29,7 +29,7 @@
 
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="3*" MinWidth="300" />
                 <ColumnDefinition Width="6*" />
             </Grid.ColumnDefinitions>
 
@@ -182,9 +182,9 @@
                 <Image
                     Width="100"
                     Height="100"
-                    Margin="83,20,0,0"
+                    Margin="83,0,0,0"
                     HorizontalAlignment="Left"
-                    VerticalAlignment="Center"
+                    VerticalAlignment="Top"
                     Source="/Resources/mouse.png"
                     Stretch="Uniform" />
                 <TextBlock
@@ -241,7 +241,9 @@
                     HorizontalAlignment="Left"
                     Style="{StaticResource InfoBorder}">
                     <TextBlock
+                        MinWidth="300"
                         HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
                         Foreground="{DynamicResource Window.Sub.Foreground}"
                         Style="{StaticResource BaseTextBlock}"
                         Text="设置鼠标位置：鼠标移到指定位置按下 F12，Ctrl + F11 开始运行，Ctrl + F12 停止运行"
