@@ -45,21 +45,9 @@
 
                     <super:SearchBox
                         Name="searchBox"
-                        Width="auto"
-                        Height="30"
-                        Margin="0"
-                        HorizontalAlignment="Stretch"
-                        VerticalAlignment="Top"
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Foreground="{DynamicResource Window.Foreground}"
-                        HideClearButtonOnMouseLeave="False"
-                        PlaceHolder="{DynamicResource Search}"
-                        PlaceHolderForeground="{DynamicResource TextBox.PlaceHolder.Foreground}"
                         Search="searchBox_Search"
                         SearchOnTextChanged="True"
-                        ShowClearButton="True"
-                        ShowSearchButton="True" />
+                        Style="{StaticResource SearchBoxStyle}" />
                     <ListBox
                         Grid.Row="1"
                         HorizontalContentAlignment="Stretch"

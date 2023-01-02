@@ -1,8 +1,8 @@
-﻿using SuperUtils.IO;
+﻿using Microsoft.Win32;
+using SuperUtils.IO;
 using SuperUtils.Time;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Management;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,16 +11,40 @@ namespace SuperToolBox.Entity
 {
     public class BaseDeviceInfo
     {
-        public static List<BaseDeviceInfo> ALL_DEVICCE_INFOS = new List<BaseDeviceInfo>()
+
+        #region "英文转中文表"
+
+        // 注意，static 初始化由上之下，引用的某个 static 变量还未初始化的话，为 NULL
+
+        private static Dictionary<string, string> SysInfoDictName = new Dictionary<string, string>()
         {
-            { new BaseDeviceInfo("系统信息","",                      LoadSysBasicInfo,        null,                                   "dataGrid1") },
-            { new BaseDeviceInfo("CPU","Win32_Processor",           LoadCpuInfo,          CpuInfoDictName,           "dataGrid2") },
-            { new BaseDeviceInfo("显卡","Win32_VideoController",     LoadVideoInfo,        VideoInfoDictName,        "dataGrid3") },
-            { new BaseDeviceInfo("键盘","Win32_Keyboard",            LoadKeyboardInfo,     KeyboardInfoDictName,     "dataGrid4") },
+            {"UUID","计算机 UUID" },
+            {"Caption","操作系统名称" },
+            {"InstallDate","操作系统安装日期" },
+            {"SerialNumber","产品ID" },
+            {"Version","操作系统版本" },
+            {"BuildNumber","构建版本" },
+            {"BuildType","构建类型" },
+            {"CodeSet","字符集" },
+            {"CountryCode","国家代码" },
+            {"CurrentTimeZone","时区" },
+            {"Debug","调试版本" },
+            {"EncryptionLevel","加密级别" },
+            {"FreePhysicalMemory","可用物理内存" },
+            {"FreeSpaceInPagingFiles","可用页大小" },
+            {"FreeVirtualMemory","可用虚拟内存" },
+            {"TotalVirtualMemorySize","总虚拟内存" },
+            {"TotalVisibleMemorySize","总可见内存" },
+            {"Locale","语言标识符" },
+            {"Manufacturer","制造商" },
+            {"MaxNumberOfProcesses","MaxNumberOfProcesses" },
+            {"MaxProcessMemorySize","MaxProcessMemorySize" },
+            {"NumberOfProcesses","NumberOfProcesses" },
+            {"NumberOfUsers","NumberOfUsers" },
+            {"SizeStoredInPagingFiles","SizeStoredInPagingFiles" },
+            {"SuiteMask","SuiteMask" },
         };
-
-
-        public static Dictionary<string, string> CpuInfoDictName = new Dictionary<string, string>()
+        private static Dictionary<string, string> CpuInfoDictName = new Dictionary<string, string>()
         {
             {"Name","名称" },
             {"MaxClockSpeed","最高频率" },
@@ -41,7 +65,19 @@ namespace SuperToolBox.Entity
             {"PowerManagementSupported","是否支持电源管理" },
         };
 
-        public static Dictionary<string, string> VideoInfoDictName = new Dictionary<string, string>()
+        private static Dictionary<string, string> BaseBoardDictName = new Dictionary<string, string>()
+        {
+            {"Product","产品" },
+            {"HostingBoard","母版" },
+            {"HotSwappable","热插拔" },
+            {"Manufacturer","制造商" },
+            {"Removable","可移除" },
+            {"Replaceable","可替换" },
+            {"SerialNumber","序列号" },
+            {"Version","版本号" },
+        };
+
+        private static Dictionary<string, string> VideoInfoDictName = new Dictionary<string, string>()
         {
             {"Name","名称" },
             {"AdapterRAM","显存大小" },
@@ -59,16 +95,112 @@ namespace SuperToolBox.Entity
             {"DeviceID","设备ID" },
             {"PNPDeviceID","产品ID" },
             {"VideoArchitecture","串流多重处理器" },
+
+            {"ColorPlanes","色彩层数" },
+            {"VideoMode","显示模式" },
         };
 
 
-        public static Dictionary<string, string> KeyboardInfoDictName = new Dictionary<string, string>()
+        private static Dictionary<string, string> KeyboardInfoDictName = new Dictionary<string, string>()
         {
             {"Name","名称" },
             {"NumberOfFunctionKeys","功能键数目" },
             {"DeviceID","设备ID" },
             {"PNPDeviceID","产品ID" },
             {"Layout","Layout" },
+        };
+
+        private static Dictionary<string, string> BiosInfoDictName = new Dictionary<string, string>()
+        {
+            {"Manufacturer","制造商" },
+            {"SMBIOSBIOSVersion","SMBIOS 版本号" },
+            {"ReleaseDate","生产日期" },
+            {"CurrentLanguage","语言" },
+            {"PrimaryBIOS","主Bios" },
+            {"SMBIOSMajorVersion","SMBIOS 主版本号" },
+            {"SMBIOSMinorVersion","SMBIOS 副版本号" },
+            {"SystemBiosMajorVersion","系统 Bios 主版本号" },
+            {"SystemBiosMinorVersion","系统 Bios 副版本号" },
+            {"SMBIOS","SMBIOS" },
+            {"Version","版本" },
+            {"EmbeddedControllerMajorVersion","嵌入式控制器主版本" },
+            {"EmbeddedControllerMinorVersion","嵌入式控制器副版本" },
+        };
+        private static Dictionary<string, string> MonitorInfoDictName = new Dictionary<string, string>()
+        {
+            {"Name","名称" },
+            {"PNPDeviceID","设备ID" },
+            {"DeviceID","DeviceID" },
+            {"MonitorManufacturer","制造商" },
+            {"PixelsPerXLogicalInch","水平像素大小" },
+            {"PixelsPerYLogicalInch","垂直像素大小" },
+            {"Availability","Availability" },
+        };
+
+        private static Dictionary<string, string> DiskDriveInfoDictName = new Dictionary<string, string>()
+        {
+            {"Caption","名称" },
+            {"Size","容量" },
+            {"TotalCylinders","柱面总数" },
+            {"TotalHeads","磁头数目" },
+            {"TotalSectors","扇区总数" },
+            {"TotalTracks","磁道总数" },
+            {"TracksPerCylinder","每柱面的磁道数目" },
+            {"SectorsPerTrack","每磁道扇区数" },
+            {"SerialNumber","序列号" },
+            {"BytesPerSector","每扇区大小（字节）" },
+            {"Description","说明" },
+            {"PNPDeviceID","设备ID" },
+            {"DeviceID","DeviceID" },
+            {"Manufacturer","制造商" },
+            {"FirmwareRevision","修订" },
+            {"InterfaceType","接口类型" },
+            {"MediaLoaded","可访问的文件系统" },
+            {"MediaType","可访问的文件系统类型" },
+            {"Partitions","多扇区" },
+            {"SCSIBus","SCSIBus" },
+            {"SCSILogicalUnit","SCSILogicalUnit" },
+            {"SCSIPort","SCSIPort" },
+            {"Signature","签名" },
+        };
+        private static Dictionary<string, string> TimezoneInfoDictName = new Dictionary<string, string>()
+        {
+            {"Caption","时区名称" },
+            {"DaylightName","名称" },
+            {"StandardName","标准时间名" },
+            {"Bias","偏差（分钟）" },
+        };
+
+        #endregion
+
+        /// <summary>
+        /// 未加入的
+        /// Win32_CodecFile
+        /// Win32_CurrentProbe
+        /// Win32_Desktop
+        /// Win32_DeviceMemoryAddress
+        /// Win32_DiskPartition
+        /// Win32_DriverForDevice
+        /// Win32_Environment
+        /// Win32_Fan
+        /// Win32_Group
+        /// Win32_IP4RouteTable
+        /// Win32_ComputerSystemProduct
+        /// Win32_PageFileUsage
+        /// </summary>
+
+        public static List<BaseDeviceInfo> ALL_DEVICCE_INFOS = new List<BaseDeviceInfo>()
+        {
+            { new BaseDeviceInfo("系统信息",    new string[]{ "Win32_OperatingSystem" },   LoadSysBasicInfo,     SysInfoDictName,           "dataGrid1") },
+            { new BaseDeviceInfo("CPU",      new string[] {  "Win32_Processor"},                 LoadCpuInfo,          CpuInfoDictName,           "dataGrid2") },
+            { new BaseDeviceInfo("主板",      new string[]{  "Win32_BaseBoard"},                 LoadNormalInfo,    BaseBoardDictName,         "dataGrid3") },
+            { new BaseDeviceInfo("显卡",      new string[]{  "Win32_VideoController",
+                                                        "Win32_DisplayControllerConfiguration"}, LoadVideoInfo,        VideoInfoDictName,        "dataGrid4") },
+            { new BaseDeviceInfo("键盘",      new string[]{  "Win32_Keyboard"},                   LoadNormalInfo,     KeyboardInfoDictName,     "dataGrid5") },
+            { new BaseDeviceInfo("Bios",      new string[]{  "Win32_BIOS"},                     LoadNormalInfo,     BiosInfoDictName,     "dataGrid6") },
+            { new BaseDeviceInfo("显示器",     new string[]{  "Win32_DesktopMonitor"},           LoadNormalInfo,     MonitorInfoDictName,     "dataGrid7") },
+            { new BaseDeviceInfo("系统硬盘",      new string[]{  "Win32_DiskDrive"},                 LoadNormalInfo,     DiskDriveInfoDictName,     "dataGrid8") },
+            { new BaseDeviceInfo("时区",      new string[]{  "Win32_TimeZone"},                  LoadNormalInfo,     TimezoneInfoDictName,     "dataGrid9") },
         };
 
         public async void PrintAllSysInfo()
@@ -145,17 +277,63 @@ namespace SuperToolBox.Entity
         }
 
 
-        private static async Task<Dictionary<string, object>> LoadSysBasicInfo(Dictionary<string, string> dictName)
+        private static async Task<Dictionary<string, object>> LoadSysBasicInfo(string[] names, Dictionary<string, string> dictName)
         {
-            return await Task.Run(() =>
+            return await Task.Run(async () =>
             {
                 Dictionary<string, object> result = new Dictionary<string, object>();
                 result.Add("操作系统", Environment.OSVersion);
+
+
+                string releaseId = Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion", "ReleaseId", "").ToString();
+                string UBR = Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion", "UBR", "").ToString();
+                result.Add("操作系统版本号", releaseId);
+
                 if (Environment.Is64BitOperatingSystem)
                     result.Add("位数", "64");
                 else
                     result.Add("位数", "32");
-                result.Add("系统文件夹", Environment.SystemDirectory);
+
+                Dictionary<string, object> dict = await LoadNormalInfo(names, dictName);
+                foreach (var key in dict.Keys)
+                {
+                    if (!result.ContainsKey(key))
+                        result.Add(key, dict[key]);
+                }
+                if (result.ContainsKey("时区"))
+                {
+                    int.TryParse(result["时区"].ToString(), out int CurrentTimeZone);
+                    if (CurrentTimeZone >= 0)
+                        result["时区"] = $"+{CurrentTimeZone / 60} H";
+                    else
+                        result["时区"] = $"-{Math.Abs(CurrentTimeZone) / 60} H";
+                }
+                if (result.ContainsKey("操作系统安装日期"))
+                {
+                    string dateString = result["操作系统安装日期"].ToString().Substring(0, "20211227212333".Length);
+                    dateString = dateString.Insert(12, ":");
+                    dateString = dateString.Insert(10, ":");
+                    dateString = dateString.Insert(8, " ");
+                    dateString = dateString.Insert(6, "-");
+                    dateString = dateString.Insert(4, "-");
+                    result["操作系统安装日期"] = dateString;
+                }
+                if (result.ContainsKey("操作系统版本"))
+                {
+                    result["操作系统版本"] += "." + UBR;
+                }
+
+                string[] sizeList = { "可用页大小", "可用物理内存", "可用虚拟内存", "总虚拟内存", "总可见内存" };
+                foreach (var sizeString in sizeList)
+                {
+                    if (result.ContainsKey(sizeString))
+                    {
+                        long.TryParse(result[sizeString].ToString(), out long size);
+                        size *= 1000;
+                        result[sizeString] = size.ToProperFileSize();
+                    }
+                }
+
                 result.Add("逻辑处理器", Environment.ProcessorCount);
                 result.Add("登陆域", Environment.UserDomainName);
                 result.Add("用户名", Environment.UserName);
@@ -166,6 +344,11 @@ namespace SuperToolBox.Entity
                 //DeviceInfoDict.Add("物理内存", Environment.WorkingSet);
                 var timespan = TimeSpan.FromMilliseconds(Environment.TickCount);
                 result.Add("系统运行时间", DateHelper.ToReadableTime((long)timespan.TotalMilliseconds));
+                result.Add("系统文件夹", Environment.SystemDirectory);
+
+
+
+
                 return result;
             });
         }
@@ -201,11 +384,13 @@ namespace SuperToolBox.Entity
 
         }
 
-        public static async Task<Dictionary<string, object>> LoadCpuInfo(Dictionary<string, string> dictName)
+        public static async Task<Dictionary<string, object>> LoadCpuInfo(string[] names, Dictionary<string, string> dictName)
         {
             //if (CpuInfoDict != null) return true;
-            Dictionary<string, object> dictionary = await DeviceInformation("Win32_Processor");
+            Dictionary<string, object> dictionary = await GetAllInfoByNames(names);
+            if (dictName == null) return dictionary;
             Dictionary<string, object> result = new Dictionary<string, object>();
+
             foreach (string key in dictName.Keys)
             {
                 if (dictionary.ContainsKey(key))
@@ -232,9 +417,30 @@ namespace SuperToolBox.Entity
 
             return result;
         }
-        public static async Task<Dictionary<string, object>> LoadVideoInfo(Dictionary<string, string> dictName)
+
+
+        private async static Task<Dictionary<string, object>> GetAllInfoByNames(string[] names)
         {
-            Dictionary<string, object> dictionary = await DeviceInformation("Win32_VideoController");
+            Dictionary<string, object> result = new Dictionary<string, object>();
+            if (names?.Length == 0) return result;
+            foreach (var name in names)
+            {
+                Dictionary<string, object> dict = await DeviceInformation(name);
+                foreach (var key in dict.Keys)
+                {
+                    if (result.ContainsKey(key) && result[key].ToString().Equals("[NULL]"))
+                        result[key] = dict[key];
+                    else if (!result.ContainsKey(key))
+                        result.Add(key, dict[key]);
+                }
+            }
+            return result;
+        }
+
+        public static async Task<Dictionary<string, object>> LoadVideoInfo(string[] names, Dictionary<string, string> dictName)
+        {
+            Dictionary<string, object> dictionary = await GetAllInfoByNames(names);
+            if (dictName == null) return dictionary;
             Dictionary<string, object> result = new Dictionary<string, object>();
             foreach (string key in dictName.Keys)
             {
@@ -262,17 +468,39 @@ namespace SuperToolBox.Entity
 
             return result;
         }
-        public static async Task<Dictionary<string, object>> LoadKeyboardInfo(Dictionary<string, string> dictName)
+
+
+        /// <summary>
+        /// 通用加载信息方法
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="dictName"></param>
+        /// <returns></returns>
+        public static async Task<Dictionary<string, object>> LoadNormalInfo(string[] names, Dictionary<string, string> dictName)
         {
-            Dictionary<string, object> dictionary = await DeviceInformation("Win32_Keyboard");
+            Dictionary<string, object> dictionary = await GetAllInfoByNames(names);
+            if (dictName == null) return dictionary;
             Dictionary<string, object> result = new Dictionary<string, object>();
             foreach (string key in dictName.Keys)
             {
                 if (dictionary.ContainsKey(key))
                 {
-                    result.Add(dictName[key], dictionary[key]);
+                    if (key.Equals("ReleaseDate") && dictionary[key] != null)
+                    {
+                        result.Add(dictName[key], $"{dictionary[key].ToString().Substring(0, "20220721".Length)}");
+                    }
+                    else if (key.Equals("Size") && dictionary[key] != null)
+                    {
+                        long.TryParse(dictionary[key].ToString(), out long value);
+                        result.Add(dictName[key], $"{value.ToProperFileSize()}");
+                    }
+                    else
+                    {
+                        result.Add(dictName[key], dictionary[key]);
+                    }
 
                 }
+
             }
 
             return result;
@@ -284,7 +512,7 @@ namespace SuperToolBox.Entity
         /// 名称
         /// </summary>
         public string Name { get; set; }
-        public string Win32Name { get; set; }
+        public string[] Win32Name { get; set; }
 
 
         /// <summary>
@@ -298,14 +526,14 @@ namespace SuperToolBox.Entity
         /// </summary>
         public Dictionary<string, string> InfoDictName { get; set; }
 
-        public Func<Dictionary<string, string>, Task<Dictionary<string, object>>> HandleAction { get; set; }
+        public Func<string[], Dictionary<string, string>, Task<Dictionary<string, object>>> HandleAction { get; set; }
 
         private System.Windows.Controls.DataGrid DataGrid { get; set; }
 
         public string DataGridName { get; set; }
 
 
-        public BaseDeviceInfo(string name, string win32Name, Func<Dictionary<string, string>, Task<Dictionary<string, object>>> handleAction,
+        public BaseDeviceInfo(string name, string[] win32Name, Func<string[], Dictionary<string, string>, Task<Dictionary<string, object>>> handleAction,
             Dictionary<string, string> infoDictName, string dataGridName)
         {
             Name = name;
@@ -317,6 +545,8 @@ namespace SuperToolBox.Entity
 
         /// <summary>
         /// 注释的获取失败
+        /// <br></br>
+        /// 参考：https://learn.microsoft.com/en-us/windows/win32/cimwin32prov/computer-system-hardware-classes
         /// </summary>
         static string[] WIN32_CLASSES =
         {

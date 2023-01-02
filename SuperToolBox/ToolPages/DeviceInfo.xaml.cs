@@ -62,15 +62,33 @@ namespace SuperToolBox.ToolPages
             CurrentDriverInfos.Add(info);
         }
 
-        private void LoadInfo()
+        private void LoadInfo(string name = "")
         {
             Task.Run(async () =>
             {
+                if (name.Equals("磁盘"))
+                {
+                    if (CurrentDriverInfos != null) return;
+                    List<DriverInfo> driverInfos = await BaseDeviceInfo.LoadDiskInfo();
+                    CurrentDriverInfos = new ObservableCollection<DriverInfo>();
+                    foreach (DriverInfo driverInfo in driverInfos)
+                    {
+                        await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadDriverInfoDelegate(LoadDriverInfo), driverInfo);
+                    }
+                    return;
+                }
+
+
                 foreach (BaseDeviceInfo deviceInfo in BaseDeviceInfo.ALL_DEVICCE_INFOS)
                 {
-                    Func<Dictionary<string, string>, Task<Dictionary<string, object>>> func = deviceInfo.HandleAction;
+                    if (!deviceInfo.Name.Equals(name)) continue;
+                    Dispatcher.Invoke((Action)(() =>
+                    {
+                        loadingLine.Visibility = Visibility.Visible;
+                    }));
+                    Func<string[], Dictionary<string, string>, Task<Dictionary<string, object>>> func = deviceInfo.HandleAction;
                     if (deviceInfo.ValueDict == null)
-                        deviceInfo.ValueDict = await func(deviceInfo.InfoDictName);
+                        deviceInfo.ValueDict = await func(deviceInfo.Win32Name, deviceInfo.InfoDictName);
                     Dispatcher.Invoke((Action)(() =>
                     {
                         string dataGridName = deviceInfo.DataGridName;
@@ -80,28 +98,28 @@ namespace SuperToolBox.ToolPages
                             dataGrid.ItemsSource = null;
                             dataGrid.ItemsSource = deviceInfo.ValueDict;
                         }
+                        loadingLine.Visibility = Visibility.Collapsed;
                     }));
                 }
 
-                // 磁盘
-                List<DriverInfo> driverInfos = await BaseDeviceInfo.LoadDiskInfo();
-                CurrentDriverInfos = new ObservableCollection<DriverInfo>();
-                foreach (DriverInfo driverInfo in driverInfos)
-                {
-                    await App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new LoadDriverInfoDelegate(LoadDriverInfo), driverInfo);
-                }
+
             });
+        }
+
+
+        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems?.Count == 0) return;
+            TabItem tabItem = e.AddedItems[0] as TabItem;
+            if (tabItem != null)
+                LoadInfo(tabItem.Header.ToString());
         }
 
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            LoadInfo();
+            //LoadInfo();
         }
 
-        private void Row_DoubleClick(object sender, MouseButtonEventArgs e)
-        {
-
-        }
     }
 }
