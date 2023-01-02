@@ -16,7 +16,7 @@ namespace SuperToolBox.ViewModel
         public static List<BaseTool> TOOLS = new List<BaseTool>()
         {
             {new BaseTool(1,"URL编码/解码","UrlEncodeDecode") },
-            //{new BaseTool(2,"加密","Encrypt") },
+            {new BaseTool(2,"加密","Encrypt") },
             {new BaseTool(3,"鼠标控制","MouseControl") },
             {new BaseTool(4,"设备信息","DeviceInfo") },
             //{new BaseTool(5,"网络监控","NetWorkMonitor") },

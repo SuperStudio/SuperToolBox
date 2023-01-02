@@ -113,6 +113,7 @@
     </ApplicationDefinition>
     <Compile Include="Config\ConfigManager.cs" />
     <Compile Include="Config\UrlManager.cs" />
+    <Compile Include="Config\WindowConfig\Settings.cs" />
     <Compile Include="Config\WindowConfig\Main.cs" />
     <Compile Include="Converters\MouseActionConverter.cs" />
     <Compile Include="Converters\MouseEventConverter.cs" />
@@ -222,11 +223,10 @@
     <Resource Include="Resources\ICO\favicon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\mouse.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="References\ICSharpCode.AvalonEdit.dll" />
     <Content Include="References\Newtonsoft.Json.dll" />
+    <Resource Include="Resources\mouse.png" />
+    <Resource Include="Resources\donate.png" />
     <Resource Include="Resources\driver.png" />
     <Resource Include="Resources\ICO\github.png" />
   </ItemGroup>

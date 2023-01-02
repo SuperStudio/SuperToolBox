@@ -9,11 +9,13 @@ namespace SuperToolBox.Config
         public const string SQLITE_DATA_PATH = "user_data.sqlite";
 
         public static Main Main { get; set; }
+        public static Settings Settings { get; set; }
 
 
         static ConfigManager()
         {
             Main = Main.CreateInstance();
+            Settings = Settings.CreateInstance();
         }
 
         public static void InitConfig()

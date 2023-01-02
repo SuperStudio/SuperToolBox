@@ -1,4 +1,6 @@
 ﻿using SuperControls.Style;
+using SuperControls.Style.Plugin;
+using SuperControls.Style.Windows;
 using SuperToolBox.Config;
 using SuperToolBox.Entity;
 using SuperToolBox.ViewModel;
@@ -129,6 +131,7 @@ namespace SuperToolBox
                  //MessageBox.Show("触发热键 F11");
                  HotKeyHandler2?.Invoke();
              });
+            InitThemeSelector();
         }
 
         private void OpenSetting(object sender, RoutedEventArgs e)
@@ -192,11 +195,93 @@ namespace SuperToolBox
 
         private void CloseTabItem(object sender, RoutedEventArgs e)
         {
-            int idx = tabControl.SelectedIndex;
+            FrameworkElement element = sender as FrameworkElement;
+            if (element == null || element.Tag == null) return;
+            string toolID = element.Tag.ToString();
+            int idx = -1;
+            for (int i = 0; i < vieModel.ToolTabs.Count; i++)
+            {
+                if (vieModel.ToolTabs[i].ToolID.ToString().Equals(toolID))
+                {
+                    idx = i;
+                    break;
+                }
+            }
+
+
+
             if (idx >= 0 && idx < vieModel.ToolTabs.Count)
             {
                 vieModel.ToolTabs.RemoveAt(idx);
             }
+        }
+
+        private void OpenDonate(object sender, RoutedEventArgs e)
+        {
+            Window_Donate window_Donate = new Window_Donate();
+            window_Donate.SetUrl(UrlManager.GetDonateJsonUrl());
+            window_Donate.ShowDialog();
+        }
+
+        private void ShowPluginWindow(object sender, RoutedEventArgs e)
+        {
+            Window_Plugin window_Plugin = new Window_Plugin();
+
+            PluginConfig config = new PluginConfig();
+            config.PluginBaseDir = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins");
+            config.RemoteUrl = UrlManager.PluginUrl;
+            // 读取本地配置
+            window_Plugin.OnEnabledChange += (enabled) =>
+            {
+                return true;
+            };
+
+            window_Plugin.OnDelete += (data) =>
+            {
+                return true;
+            };
+
+            window_Plugin.OnBeginDownload += (data) =>
+            {
+                return true;
+            };
+
+            window_Plugin.SetConfig(config);
+            window_Plugin.Show();
+        }
+
+        public void InitThemeSelector()
+        {
+            DefaultThemeSelector.AddTransParentColor("TabItem.Background");
+            DefaultThemeSelector.AddTransParentColor("Window.Title.Background");
+            DefaultThemeSelector.AddTransParentColor("ListBoxItem.Background");
+            DefaultThemeSelector.AddTransParentColor("DataGrid.Header.Background");
+            DefaultThemeSelector.AddTransParentColor("DataGrid.Header.Hover.Background");
+            DefaultThemeSelector.AddTransParentColor("DataGrid.Row.Even.Background");
+            DefaultThemeSelector.AddTransParentColor("DataGrid.Row.Odd.Background");
+            DefaultThemeSelector.AddTransParentColor("DataGrid.Row.Hover.Background");
+            DefaultThemeSelector.SetThemeConfig(ConfigManager.Settings.ThemeIdx, ConfigManager.Settings.ThemeID);
+            DefaultThemeSelector.onThemeChanged += (ThemeIdx, ThemeID) =>
+            {
+                ConfigManager.Settings.ThemeIdx = ThemeIdx;
+                ConfigManager.Settings.ThemeID = ThemeID;
+                ConfigManager.Settings.Save();
+            };
+            DefaultThemeSelector.onBackGroundImageChanged += (image) =>
+            {
+                DefaultBgImage.Source = image;
+            };
+            DefaultThemeSelector.onSetBgColorTransparent += () =>
+            {
+                DefaultTitleBorder.Background = Brushes.Transparent;
+            };
+
+            DefaultThemeSelector.onReSetBgColorBinding += () =>
+            {
+                DefaultTitleBorder.SetResourceReference(Control.BackgroundProperty, "Window.Title.Background");
+            };
+
+            DefaultThemeSelector.InitThemes();
         }
     }
 }

@@ -17,10 +17,12 @@
     ContentRendered="BaseWindow_ContentRendered"
     Foreground="{DynamicResource Window.Foreground}"
     Icon="/Resources/ICO/Icon_32.png"
+    ShowThemeSelector="True"
     TitleAlign="Left"
     TitleMargin="5 0"
     mc:Ignorable="d">
     <Grid>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="auto" />
@@ -134,8 +136,14 @@
                                         Click="OpenSetting"
                                         Header="设置"
                                         Visibility="Collapsed" />
+                                    <MenuItem Click="ShowPluginWindow" Header="插件" />
                                     <MenuItem Command="cmd:OpenWindow.Upgrade" Header="检查更新" />
                                     <MenuItem Click="ShowAbout" Header="关于" />
+                                    <MenuItem
+                                        Click="OpenDonate"
+                                        Header="为我充电"
+                                        Icon="/Resources/donate.png"
+                                        Visibility="{Binding ShowDonate, Converter={StaticResource bool2VisibilityConverter}}" />
                                 </ContextMenu>
                             </Border.ContextMenu>
                             <Viewbox
@@ -190,7 +198,7 @@
                                             HorizontalAlignment="Right"
                                             Click="CloseTabItem"
                                             Style="{StaticResource RoundNormalButton}"
-                                            Tag="{DynamicResource TabItem.Hover.Background}"
+                                            Tag="{Binding ToolID}"
                                             Visibility="Visible">
                                             <Viewbox
                                                 Width="10"
@@ -241,5 +249,6 @@
                 TextWrapping="NoWrap" />
 
         </Grid>
+
     </Grid>
 </super:BaseWindow>

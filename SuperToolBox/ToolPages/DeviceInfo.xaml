@@ -141,7 +141,7 @@
 
                 </DataGrid>
             </TabItem>
-            <TabItem Header="Bios">
+            <TabItem Header="BIOS">
                 <DataGrid x:Name="dataGrid6" Style="{DynamicResource InfoDataGridStyle}">
                     <DataGrid.Columns>
                         <StaticResource ResourceKey="KeyTemplateColumn" />
