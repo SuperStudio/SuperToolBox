@@ -14,13 +14,35 @@ SuperToolBox 是一款**Window 工具箱**
 
 下载地址：[点此下载](https://github.com/SuperStudio/SuperToolBox/releases)
 
-<img src="Image/image-20221110021925653.png" alt="image-20221110021925653" style="zoom:80%;" />
-
 # 关于
 
-SuperToolBox 是一款**Window 工具箱**，支持以下特点：
+SuperToolBox 是一款**Window 工具箱**，支持以下功能：
 
-1. URL 编码/解码
+- URL 编码/解码
+- 加解密
+- 鼠标控制
+- 显示设备信息
+
+具有的特殊功能：
+
+- 更换皮肤
+- 插件管理
+
+一、URL 编码/解码
+
+<img src="Image/image-20230102211524266.png" alt="image-20230102211524266" style="zoom:80%;" />
+
+二、加解密
+
+<img src="Image/image-20230102211635472.png" alt="image-20230102211635472" style="zoom:80%;" />
+
+三、鼠标控制
+
+<img src="Image/image-20230102211711919.png" alt="image-20230102211711919" style="zoom:80%;" />
+
+四、显示设备信息
+
+<img src="Image/image-20230102211751119.png" alt="image-20230102211751119" style="zoom:80%;" />
 
 # 文档
 

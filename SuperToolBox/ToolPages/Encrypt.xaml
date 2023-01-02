@@ -68,7 +68,7 @@
                                         VerticalContentAlignment="Top"
                                         Background="Transparent"
                                         Style="{StaticResource BaseTextBox}"
-                                        Text="123"
+                                        Text=""
                                         TextWrapping="Wrap" />
                                 </Border>
 
