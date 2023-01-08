@@ -2,7 +2,6 @@
     x:Class="SuperToolBox.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:cmd="clr-namespace:SuperToolBox.Commands"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:SuperToolBox"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -137,7 +136,7 @@
                                         Header="设置"
                                         Visibility="Collapsed" />
                                     <MenuItem Click="ShowPluginWindow" Header="插件" />
-                                    <MenuItem Command="cmd:OpenWindow.Upgrade" Header="检查更新" />
+                                    <MenuItem Click="ShowUpgradeWindow" Header="检查更新" />
                                     <MenuItem Click="ShowAbout" Header="关于" />
                                     <MenuItem
                                         Click="OpenDonate"

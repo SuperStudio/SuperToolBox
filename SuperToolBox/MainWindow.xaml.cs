@@ -3,6 +3,7 @@ using SuperControls.Style.Plugin;
 using SuperControls.Style.Windows;
 using SuperToolBox.Config;
 using SuperToolBox.Entity;
+using SuperToolBox.Upgrade;
 using SuperToolBox.ViewModel;
 using SuperToolBox.Windows;
 using SuperUtils.Framework.WinNativeMethods;
@@ -132,7 +133,44 @@ namespace SuperToolBox
                  HotKeyHandler2?.Invoke();
              });
             InitThemeSelector();
+            InitUpgrade();
         }
+
+
+        public void InitUpgrade()
+        {
+            UpgradeHelper.Init(this);
+            CheckUpgrade();
+        }
+
+        private async void CheckUpgrade()
+        {
+            // 启动后检查更新
+            try
+            {
+                await Task.Delay(UpgradeHelper.AUTO_CHECK_UPGRADE_DELAY);
+                (string LatestVersion, string ReleaseDate, string ReleaseNote) result = await UpgradeHelper.GetUpgardeInfo();
+                string remote = result.LatestVersion;
+                string ReleaseDate = result.ReleaseDate;
+                if (!string.IsNullOrEmpty(remote))
+                {
+                    string local = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                    local = local.Substring(0, local.Length - ".0.0".Length);
+                    if (local.CompareTo(remote) < 0)
+                    {
+                        bool opened = (bool)new MsgBox(this,
+                            $"存在新版本\n版本：{remote}\n日期：{ReleaseDate}").ShowDialog();
+                        if (opened)
+                            UpgradeHelper.OpenWindow();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
 
         private void OpenSetting(object sender, RoutedEventArgs e)
         {
@@ -229,7 +267,7 @@ namespace SuperToolBox
 
             PluginConfig config = new PluginConfig();
             config.PluginBaseDir = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins");
-            config.RemoteUrl = UrlManager.PluginUrl;
+            config.RemoteUrl = UrlManager.GetPluginUrl();
             // 读取本地配置
             window_Plugin.OnEnabledChange += (enabled) =>
             {
@@ -282,6 +320,11 @@ namespace SuperToolBox
             };
 
             DefaultThemeSelector.InitThemes();
+        }
+
+        private void ShowUpgradeWindow(object sender, RoutedEventArgs e)
+        {
+            UpgradeHelper.OpenWindow();
         }
     }
 }

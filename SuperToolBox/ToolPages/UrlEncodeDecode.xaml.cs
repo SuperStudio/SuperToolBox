@@ -54,7 +54,7 @@ namespace SuperToolBox.ToolPages
             if (string.IsNullOrEmpty(originTextBox.Text)) return;
             if (ClipBoard.TrySetDataObject(originTextBox.Text))
             {
-                MessageCard.Success("复制成功");
+                MessageNotify.Success("复制成功");
             }
         }
 
@@ -63,7 +63,7 @@ namespace SuperToolBox.ToolPages
             if (string.IsNullOrEmpty(targetTextBox.Text)) return;
             if (ClipBoard.TrySetDataObject(targetTextBox.Text))
             {
-                MessageCard.Success("复制成功");
+                MessageNotify.Success("复制成功");
             }
         }
 

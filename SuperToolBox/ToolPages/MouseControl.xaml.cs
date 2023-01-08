@@ -315,7 +315,7 @@ namespace SuperToolBox.ToolPages
 
         private void SetMousePoint(object sender, RoutedEventArgs e)
         {
-            MessageCard.Info("按下 F12 设置鼠标位置");
+            MessageNotify.Info("按下 F12 设置鼠标位置");
         }
 
         private void AddNewProject(object sender, MouseButtonEventArgs e)

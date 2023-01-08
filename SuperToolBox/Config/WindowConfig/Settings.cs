@@ -20,6 +20,7 @@ namespace SuperToolBox.Config.WindowConfig
         }
         public long ThemeIdx { get; set; }
         public string ThemeID { get; set; }
+        public long RemoteIndex { get; set; }
 
     }
 }

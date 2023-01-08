@@ -1,4 +1,7 @@
-﻿using SuperUtils.IO;
+﻿using Newtonsoft.Json.Linq;
+using SuperControls.Style.Upgrade;
+using SuperUtils.Common;
+using SuperUtils.IO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,33 +14,89 @@ namespace SuperToolBox.Config
     public static class UrlManager
     {
 
-        public static readonly string ReleaseUrl = "https://github.com/SuperStudio/SuperToolBox/releases";
-        public static readonly string UpgradeSource = "https://superstudio.github.io";
-        public static readonly string UpdateUrl = "https://superstudio.github.io/SuperToolBox-Upgrade/latest.json";
-        public const string UpdateFileListUrl = "https://superstudio.github.io/SuperToolBox-Upgrade/list.json";
-        public static string UpdateFilePathUrl = "https://superstudio.github.io/SuperToolBox-Upgrade/File/";
-        private static string DonateJsonUrl = "https://superstudio.github.io/SuperSudio-Donate/config.json";
-        public static string PluginUrl = "https://superstudio.github.io/SuperPlugins/";
+        public static Dictionary<string, UpgradeSource> UpgradeSourceDict = new Dictionary<string, UpgradeSource>()
+        {
+            {"Github",new UpgradeSource("https://superstudio.github.io/","https://github.com/SuperStudio/SuperToolBox/releases","SuperToolBox-Upgrade") },
+            {"Github加速",new UpgradeSource("https://cdn.jsdelivr.net/gh/SuperStudio/","https://gitee.com/SuperStudio/SuperToolBox/releases","SuperToolBox-Upgrade") },
+        };
+
+        public static List<string> UpgradeSourceKeys = UpgradeSourceDict.Keys.ToList();
+
+        private static int RemoteIndex = (int)ConfigManager.Settings.RemoteIndex; // 用户切换源的时候存储起来
+
+        private static string DonateJsonBasePath = "SuperSudio-Donate";
+        private static string PluginBasePath = "SuperPlugins";
+        public static string FeedbackUrl = "https://github.com/SuperStudio/SuperCom/issues";
+        public static string HelpUrl = "https://github.com/SuperStudio/SuperCom/wiki";
+
+
+        public static int GetRemoteIndex()
+        {
+            return RemoteIndex;
+        }
+        public static void SetRemoteIndex(int idx)
+        {
+            RemoteIndex = idx;
+        }
+        public static string GetRemoteBasePath()
+        {
+            if (RemoteIndex < 0 || RemoteIndex >= UpgradeSourceKeys.Count)
+                RemoteIndex = 0;
+            return UpgradeSourceDict[UpgradeSourceKeys[RemoteIndex]].BaseUrl;
+        }
 
         public static string GetDonateJsonUrl()
         {
-            return DonateJsonUrl;
+            return $"{GetRemoteBasePath()}{DonateJsonBasePath}/config.json";
+        }
+        public static string GetPluginUrl()
+        {
+            return $"{GetRemoteBasePath()}{PluginBasePath}/";
         }
 
         static UrlManager()
         {
             Type t = typeof(UrlManager);
-            FieldInfo[] fields = t.GetFields(BindingFlags.Static | BindingFlags.Public);
-
-            foreach (FieldInfo fi in fields)
+            JArray array = FileHelper.TryReadConfigFromJson("UpgradeSources") as JArray;
+            if (array == null || array.Count == 0) return;
+            foreach (JObject obj in array)
             {
-                string name = fi.Name;
-                string value = FileHelper.TryReadConfigFromJson(name);
-                if (!string.IsNullOrEmpty(value))
+                if (obj == null) continue;
+                Dictionary<string, string> dict = obj.ToObject<Dictionary<string, string>>();
+                if (dict == null) continue;
+                if (dict.ContainsKey("Name") && !string.IsNullOrEmpty(dict["Name"]))
                 {
-                    fi.SetValue(null, value);
+                    string value = dict["Name"];
+
+                    PluginBasePath = dict.Get("PluginPath", PluginBasePath);
+                    FeedbackUrl = dict.Get("FeedbackUrl", FeedbackUrl);
+                    HelpUrl = dict.Get("HelpUrl", HelpUrl);
+                    string UpgradeSource = dict.Get("UpgradeSource", "");
+                    string UpdatePath = dict.Get("UpdatePath", "");
+                    string ReleaseUrl = dict.Get("ReleaseUrl", "");
+                    if (UpgradeSourceDict.ContainsKey(value))
+                    {
+                        UpgradeSource source = UpgradeSourceDict[value];
+                        if (!string.IsNullOrEmpty(UpgradeSource))
+                            source.BaseUrl = UpgradeSource;
+                        if (!string.IsNullOrEmpty(UpdatePath))
+                            source.RemotePath = UpdatePath;
+                        if (!string.IsNullOrEmpty(ReleaseUrl))
+                            source.ReleaseUrl = ReleaseUrl;
+                        UpgradeSourceDict[value] = source;
+                    }
+                    else
+                    {
+                        UpgradeSource source = new UpgradeSource(UpgradeSource, ReleaseUrl, UpdatePath);
+                        UpgradeSourceDict.Add(value, source);
+                    }
+
                 }
+
+
             }
+
+
         }
     }
 }
