@@ -79,7 +79,7 @@
                 FontSize="11"
                 Foreground="{DynamicResource Window.Sub.Foreground}"
                 Style="{StaticResource ReadOnlyTextBox}"
-                Text="发行日期：2023-1-2" />
+                Text="发行日期：2023-1-8" />
 
             <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
                 <StackPanel Margin="0" Orientation="Horizontal">
