@@ -13,7 +13,7 @@ namespace SuperToolBox.Config
 {
     public static class UrlManager
     {
-
+        public const string PROJECT_URL = "https://github.com/SuperStudio/SuperToolBox";
         public static Dictionary<string, UpgradeSource> UpgradeSourceDict = new Dictionary<string, UpgradeSource>()
         {
             {"Github",new UpgradeSource("https://superstudio.github.io/","https://github.com/SuperStudio/SuperToolBox/releases","SuperToolBox-Upgrade") },

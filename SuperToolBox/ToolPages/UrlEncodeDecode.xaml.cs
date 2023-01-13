@@ -1,6 +1,7 @@
 ﻿using ICSharpCode.AvalonEdit;
 using Newtonsoft.Json;
 using SuperControls.Style;
+using SuperToolBox.Config;
 using SuperUtils.Common;
 using SuperUtils.IO;
 using System;
@@ -103,29 +104,41 @@ namespace SuperToolBox.ToolPages
 
         private void Border_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            Border border = sender as Border;
-            TextEditor textEditor = border.Child as TextEditor;
-            if (e.Key == Key.F3)
-            {
-                textEditor.Text = textEditor.Text.Trim()
-                    .Replace("\n", "")
-                    .Replace("\r", "")
-                    .Replace(" ", "");
-            }
-            else if (Keyboard.IsKeyDown(Key.F) && Keyboard.IsKeyDown(Key.LeftAlt) && Keyboard.IsKeyDown(Key.LeftShift))
+            if (Keyboard.IsKeyDown(Key.F) && Keyboard.IsKeyDown(Key.LeftAlt) && Keyboard.IsKeyDown(Key.LeftShift))
             {
                 // 格式化
                 //textEditor.SyntaxHighlighting = null;
                 //textEditor.SyntaxHighlighting = ICSharpCode.AvalonEdit.Highlighting.HighlightingManager.HighlightingDefinitions;
-                string text = textEditor.Text;
+                FormatString(originTextBox);
+            }
+        }
+
+        private void FormatString(TextEditor textEditor)
+        {
+            string text = textEditor.Text;
+            if (text.IndexOf("\r") >= 0 || text.IndexOf("\n") >= 0)
+            {
+                textEditor.Text = text.Trim()
+                .Replace("\n", "")
+                .Replace("\r", "")
+                .Replace(" ", "");
+            }
+            else
+            {
                 Dictionary<string, object> dictionary = JsonUtils.TryDeserializeObject<Dictionary<string, object>>(textEditor.Text);
                 if (dictionary != null)
                 {
-                    string json_text = JsonUtils.TrySerializeObject(dictionary, Formatting.Indented);
+                    string json_text = JsonUtils.TrySerializeObject(dictionary);
                     if (!string.IsNullOrEmpty(json_text))
                         textEditor.Text = json_text;
                 }
+
             }
+        }
+
+        private void FormatOriginText(object sender, RoutedEventArgs e)
+        {
+            FormatString(originTextBox);
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
@@ -134,6 +147,47 @@ namespace SuperToolBox.ToolPages
             textEditorOptions.EnableHyperlinks = false;
             textEditorOptions.HighlightCurrentLine = true;
             originTextBox.Options = textEditorOptions;
+
+            originTextBox.Text = ConfigManager.UrlEncodePage.OriginText;
+            targetTextBox.Text = ConfigManager.UrlEncodePage.TargetText;
+
+        }
+
+        private void Page_Unloaded(object sender, RoutedEventArgs e)
+        {
+            SaveText();
+        }
+
+        private void SaveText()
+        {
+
+            ConfigManager.UrlEncodePage.OriginText = originTextBox.Text;
+            ConfigManager.UrlEncodePage.TargetText = targetTextBox.Text;
+            ConfigManager.UrlEncodePage.Save();
+        }
+
+        private void Border_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            MessageNotify.Info("Alt+Shift+F 格式化为 json 或 转为一行");
+        }
+
+        private void originTextBox_TextChanged(object sender, EventArgs e)
+        {
+            TextEditor textEditor = sender as TextEditor;
+            if (originLineTextBlock != null && textEditor != null)
+                originLineTextBlock.Text = $"总长度：{textEditor.Text.Length} 总行数：{textEditor.LineCount}";
+        }
+
+        private void targetTextBox_TextChanged(object sender, EventArgs e)
+        {
+            TextEditor textEditor = sender as TextEditor;
+            if (targetLineTextBlock != null && textEditor != null)
+                targetLineTextBlock.Text = $"总长度：{textEditor.Text.Length} 总行数：{textEditor.LineCount}";
+        }
+
+        private void TextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            SaveText();
         }
     }
 }

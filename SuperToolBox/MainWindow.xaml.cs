@@ -7,6 +7,8 @@ using SuperToolBox.Upgrade;
 using SuperToolBox.ViewModel;
 using SuperToolBox.Windows;
 using SuperUtils.Framework.WinNativeMethods;
+using SuperUtils.IO;
+using SuperUtils.Media;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -179,7 +181,17 @@ namespace SuperToolBox
 
         private void ShowAbout(object sender, RoutedEventArgs e)
         {
-            new About(this).ShowDialog();
+            string local = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            local = local.Substring(0, local.Length);
+            System.Windows.Media.Imaging.BitmapImage bitmapImage = ImageHelper.ImageFromUri("pack://application:,,,/Resources/ICO/Icon_128.png");
+            SuperControls.Style.Windows.About about = new SuperControls.Style.Windows.About(this, bitmapImage, "SuperToolBox",
+                "Window 超级工具箱", local, ConfigManager.RELEASE_DATE,
+                "Github", UrlManager.PROJECT_URL, "Chao", "GPL-3.0");
+            about.OnOtherClick += (s, ev) =>
+            {
+                //FileHelper.TryOpenUrl(UrlManager.WebPage);
+            };
+            about.ShowDialog();
         }
 
         private void ShowSettingsPopup(object sender, MouseButtonEventArgs e)

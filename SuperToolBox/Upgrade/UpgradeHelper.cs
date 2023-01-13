@@ -55,7 +55,7 @@ namespace SuperToolBox.Upgrade
         {
             if (WindowClosed)
                 CreateDialog_Upgrade();
-            dialog_Upgrade.ShowDialog();
+            dialog_Upgrade?.ShowDialog();
 
         }
 
