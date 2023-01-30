@@ -44,8 +44,8 @@ namespace SuperToolBox.ViewModel
             MouseCommand mouseCommand = new MouseCommand();
             mouseCommand.Delay = MouseCommand.DEFAULT_DELAY;
             mouseCommand.CommandOrder = MouseCommands.Count + 1;
-            mouseCommand.MouseButton = MouseButton.None;
-            mouseCommand.MouseAction = MouseAction.None;
+            mouseCommand.MouseButton = MouseButton.Left;
+            mouseCommand.MouseAction = MouseAction.Click;
             MouseCommands.Add(mouseCommand);
             commandMapper.Insert(mouseCommand);
         }

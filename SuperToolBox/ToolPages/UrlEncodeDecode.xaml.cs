@@ -1,4 +1,5 @@
 ﻿using ICSharpCode.AvalonEdit;
+using ICSharpCode.AvalonEdit.Search;
 using Newtonsoft.Json;
 using SuperControls.Style;
 using SuperToolBox.Config;
@@ -150,6 +151,9 @@ namespace SuperToolBox.ToolPages
 
             originTextBox.Text = ConfigManager.UrlEncodePage.OriginText;
             targetTextBox.Text = ConfigManager.UrlEncodePage.TargetText;
+
+            SearchPanel.Install(originTextBox);
+            SearchPanel.Install(targetTextBox);
 
         }
 

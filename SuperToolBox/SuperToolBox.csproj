@@ -144,6 +144,10 @@
     <Compile Include="Windows\Window_SelectMousePoint.xaml.cs">
       <DependentUpon>Window_SelectMousePoint.xaml</DependentUpon>
     </Compile>
+    <Page Include="AvalonEdit\SearchPanel\SearchPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -236,6 +240,14 @@
   <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
   <Import Project="..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.116.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets" Condition="Exists('..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.116.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" />
   <PropertyGroup>
-    <PreBuildEvent>XCOPY  "D:\SuperStudio\Newtonsoft.Json\Src\Newtonsoft.Json\bin\Release\net472\Newtonsoft.Json.dll" "$(ProjectDir)References"    /E /Y /i</PreBuildEvent>
+    <PreBuildEvent>XCOPY  "D:\SuperStudio\Newtonsoft.Json\Src\Newtonsoft.Json\bin\Release\net472\Newtonsoft.Json.dll" "$(ProjectDir)References"    /E /Y /i
+XCOPY  "D:\SuperStudio\SuperUtils\SuperUtils\bin\Debug\SuperUtils.dll" "$(ProjectDir)References"    /E /Y /i
+XCOPY  "D:\SuperStudio\SuperControls\SuperControls.Style\bin\Debug\SuperControls.Style.dll" "$(ProjectDir)References"    /E /Y /i
+XCOPY  "D:\SuperStudio\AvalonEdit\ICSharpCode.AvalonEdit\bin\Release\net462\ICSharpCode.AvalonEdit.dll" "$(ProjectDir)References"    /E /Y /i
+
+
+
+
+</PreBuildEvent>
   </PropertyGroup>
 </Project>

@@ -15,7 +15,7 @@
                 <ResourceDictionary Source="pack://application:,,,/SuperControls.Style;Component/Lang/zh-CN.xaml" />
 
                 <ResourceDictionary Source="pack://application:,,,/SuperControls.Style;Component/Themes/SuperControls.xaml" />
-
+                <ResourceDictionary Source="pack://application:,,,/SuperToolBox;Component/AvalonEdit/SearchPanel/SearchPanel.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

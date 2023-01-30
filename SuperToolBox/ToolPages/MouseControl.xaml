@@ -614,15 +614,13 @@
                             SortMemberPath="CommandOrder">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBox
-                                        MinWidth="40"
+                                    <super:SearchBox
+                                        Width="70"
                                         Background="Transparent"
-                                        ContextMenu="{StaticResource TextBoxContextMenu}"
                                         LostFocus="SaveMouseCommands"
-                                        Style="{StaticResource BaseTextBox}"
+                                        Style="{StaticResource SearchTextBoxStyle}"
                                         Tag="{Binding ID, Mode=OneWay}"
-                                        Text="{Binding CommandOrder, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                        TextAlignment="Left" />
+                                        Text="{Binding CommandOrder, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
@@ -634,15 +632,13 @@
                             SortMemberPath="Delay">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBox
-                                        MinWidth="40"
+                                    <super:SearchBox
+                                        Width="100"
                                         Background="Transparent"
-                                        ContextMenu="{StaticResource TextBoxContextMenu}"
                                         LostFocus="SaveMouseCommands"
-                                        Style="{StaticResource BaseTextBox}"
+                                        Style="{StaticResource SearchTextBoxStyle}"
                                         Tag="{Binding ID, Mode=OneWay}"
-                                        Text="{Binding Delay, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                        TextAlignment="Left" />
+                                        Text="{Binding Delay, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
@@ -674,7 +670,7 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <ComboBox
-                                        MinWidth="150"
+                                        MinWidth="100"
                                         SelectedIndex="{Binding MouseButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource MouseButtonConverter}}"
                                         SelectionChanged="MouseEventSelectionChanged"
                                         Style="{StaticResource BorderComboBox}"
@@ -696,7 +692,7 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <ComboBox
-                                        MinWidth="150"
+                                        MinWidth="100"
                                         SelectedIndex="{Binding MouseAction, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource MouseActionConverter}}"
                                         SelectionChanged="MouseEventSelectionChanged"
                                         Style="{StaticResource BorderComboBox}"

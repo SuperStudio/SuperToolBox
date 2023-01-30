@@ -1,12 +1,7 @@
-﻿
-using SuperToolBox.Config;
-using SuperToolBox.Entity;
-using SuperUtils.Common;
-using SuperUtils.Framework.ORM.Mapper;
+﻿using SuperToolBox.Entity;
 using SuperUtils.WPF.VieModel;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO.Ports;
 using System.Linq;
 
 namespace SuperToolBox.ViewModel
@@ -15,10 +10,10 @@ namespace SuperToolBox.ViewModel
     {
         public static List<BaseTool> TOOLS = new List<BaseTool>()
         {
-            {new BaseTool(1,"URL编码/解码","UrlEncodeDecode") },
-            {new BaseTool(2,"加密","Encrypt") },
-            {new BaseTool(3,"鼠标控制","MouseControl") },
-            {new BaseTool(4,"设备信息","DeviceInfo") },
+            {new BaseTool(1,"URL编码/解码","UrlEncodeDecode",1 )},
+            {new BaseTool(2,"加密","Encrypt" ,1)},
+            {new BaseTool(3,"鼠标控制","MouseControl",1) },
+            {new BaseTool(4,"设备信息","DeviceInfo",1 )},
             //{new BaseTool(5,"网络监控","NetWorkMonitor") },
         };
 
@@ -35,6 +30,7 @@ namespace SuperToolBox.ViewModel
                 BaseTool baseTool = new BaseTool();
                 baseTool.Name = item.Name;
                 baseTool.ToolID = item.ToolID;
+                baseTool.MaxOpenCount = item.MaxOpenCount;
                 baseTool.UIPageName = $"pack://application:,,,/ToolPages/{ item.UIPageName}.xaml";
                 ToolList.Add(baseTool);
             }
@@ -73,8 +69,21 @@ namespace SuperToolBox.ViewModel
         {
             if (ToolTabs == null) ToolTabs = new ObservableCollection<BaseTool>();
             BaseTool baseTool = CurrentToolList.Where(arg => arg.ToolID == toolID).FirstOrDefault();
-            if (baseTool != null && !ToolTabs.Contains(baseTool))
-                ToolTabs.Add(baseTool);
+            if (baseTool != null)
+            {
+                BaseTool existTool = ToolTabs.FirstOrDefault(arg => arg.ToolID == toolID);
+                if (existTool == null)
+                    ToolTabs.Add(baseTool);
+                else
+                {
+                    int count = ToolTabs.Count(arg => arg.ToolID == toolID);
+                    if (baseTool.MaxOpenCount == 0)
+                        ToolTabs.Add(baseTool);
+                    else if (count < baseTool.MaxOpenCount)
+                        ToolTabs.Add(baseTool);
+                }
+            }
+
         }
 
 

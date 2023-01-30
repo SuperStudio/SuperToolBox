@@ -142,7 +142,7 @@
                                         Click="OpenDonate"
                                         Header="为我充电"
                                         Icon="/Resources/donate.png"
-                                        Visibility="{Binding ShowDonate, Converter={StaticResource bool2VisibilityConverter}}" />
+                                        Visibility="Collapsed" />
                                 </ContextMenu>
                             </Border.ContextMenu>
                             <Viewbox

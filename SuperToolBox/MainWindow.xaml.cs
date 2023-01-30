@@ -69,6 +69,9 @@ namespace SuperToolBox
             ConfigManager.Main.Width = this.Width;
             ConfigManager.Main.Height = this.Height;
             ConfigManager.Main.WindowState = (long)baseWindowState;
+            if (vieModel != null && vieModel.ToolTabs != null)
+                ConfigManager.Main.BeforeOpendTools =
+                    string.Join(",", vieModel.ToolTabs.Select(arg => arg.ToolID));
             ConfigManager.Main.Save();
         }
 
@@ -136,6 +139,19 @@ namespace SuperToolBox
              });
             InitThemeSelector();
             InitUpgrade();
+            OpenBeforeTools();
+        }
+
+        private void OpenBeforeTools()
+        {
+            if (!string.IsNullOrEmpty(ConfigManager.Main.BeforeOpendTools))
+            {
+                foreach (var item in ConfigManager.Main.BeforeOpendTools.Split(','))
+                {
+                    if (long.TryParse(item, out long id))
+                        OpenToolById(id);
+                }
+            }
         }
 
 
@@ -181,16 +197,31 @@ namespace SuperToolBox
 
         private void ShowAbout(object sender, RoutedEventArgs e)
         {
+            //string local = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            //local = local.Substring(0, local.Length);
+            //System.Windows.Media.Imaging.BitmapImage bitmapImage = ImageHelper.ImageFromUri("pack://application:,,,/Resources/ICO/Icon_128.png");
+            //SuperControls.Style.Windows.About about = new SuperControls.Style.Windows.About(this, bitmapImage, "SuperToolBox",
+            //    "Window 超级工具箱", local, ConfigManager.RELEASE_DATE,
+            //    "Github", UrlManager.PROJECT_URL, "Chao", "GPL-3.0");
+            //about.OnOtherClick += (s, ev) =>
+            //{
+            //    //FileHelper.TryOpenUrl(UrlManager.WebPage);
+            //};
+            //about.ShowDialog();
+
+            Dialog_About about = new Dialog_About();
             string local = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            local = local.Substring(0, local.Length);
-            System.Windows.Media.Imaging.BitmapImage bitmapImage = ImageHelper.ImageFromUri("pack://application:,,,/Resources/ICO/Icon_128.png");
-            SuperControls.Style.Windows.About about = new SuperControls.Style.Windows.About(this, bitmapImage, "SuperToolBox",
-                "Window 超级工具箱", local, ConfigManager.RELEASE_DATE,
-                "Github", UrlManager.PROJECT_URL, "Chao", "GPL-3.0");
-            about.OnOtherClick += (s, ev) =>
-            {
-                //FileHelper.TryOpenUrl(UrlManager.WebPage);
-            };
+            local = local.Substring(0, local.Length - ".0.0".Length);
+            about.AppName = "SuperToolBox";
+            about.AppSubName = "Window 超级工具箱";
+            about.Version = local;
+            about.ReleaseDate = ConfigManager.RELEASE_DATE;
+            about.Author = "Chao";
+            about.License = "GPL-3.0";
+            about.GithubUrl = "https://github.com/SuperStudio/SuperToolBox";
+            about.WebUrl = "https://github.com/SuperStudio/SuperToolBox";
+            about.JoinGroupUrl = "https://github.com/SuperStudio/SuperToolBox";
+            about.Image = SuperUtils.Media.ImageHelper.ImageFromUri("pack://application:,,,/SuperToolBox;Component/Resources/ICO/Icon_128.png");
             about.ShowDialog();
         }
 
@@ -219,18 +250,8 @@ namespace SuperToolBox
             Button button = sender as Button;
             if (button != null && button.Tag != null && long.TryParse(button.Tag.ToString(), out long id))
             {
-                vieModel.OpenTool(id);
-                // 设置选中
 
-                for (int i = 0; i < vieModel.ToolTabs.Count; i++)
-                {
-                    if (vieModel.ToolTabs[i].ToolID == id)
-                    {
-                        tabControl.SelectedIndex = i;
-                        break;
-                    }
-                }
-
+                OpenToolById(id);
                 //for (int i = 0; i < vieModel.ToolList.Count; i++)
                 //{
                 //    if (vieModel.ToolList[i].ToolID == id)
@@ -240,6 +261,19 @@ namespace SuperToolBox
                 //    }
                 //}
 
+            }
+        }
+        private void OpenToolById(long id)
+        {
+            vieModel.OpenTool(id);
+            // 设置选中
+            for (int i = vieModel.ToolTabs.Count - 1; i >= 0; i--)
+            {
+                if (vieModel.ToolTabs[i].ToolID == id)
+                {
+                    tabControl.SelectedIndex = i;
+                    break;
+                }
             }
         }
 
