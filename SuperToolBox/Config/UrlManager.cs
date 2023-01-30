@@ -16,6 +16,7 @@ namespace SuperToolBox.Config
         public const string PROJECT_URL = "https://github.com/SuperStudio/SuperToolBox";
         public static Dictionary<string, UpgradeSource> UpgradeSourceDict = new Dictionary<string, UpgradeSource>()
         {
+            {"StormGit加速",new UpgradeSource("https://soarerrowan-8k8egf.stormkit.dev/","https://github.com/SuperStudio/SuperToolBox/releases","") },
             {"Github",new UpgradeSource("https://superstudio.github.io/","https://github.com/SuperStudio/SuperToolBox/releases","SuperToolBox-Upgrade") },
             {"Github加速",new UpgradeSource("https://cdn.jsdelivr.net/gh/SuperStudio/","https://gitee.com/SuperStudio/SuperToolBox/releases","SuperToolBox-Upgrade") },
         };
