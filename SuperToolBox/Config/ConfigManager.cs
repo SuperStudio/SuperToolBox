@@ -8,12 +8,13 @@ namespace SuperToolBox.Config
     public static class ConfigManager
     {
         public const string SQLITE_DATA_PATH = "user_data.sqlite";
-        public const string RELEASE_DATE = "2023-01-14";
+        public const string RELEASE_DATE = "2023-02-14";
 
 
         public static Main Main { get; set; }
         public static Settings Settings { get; set; }
         public static UrlEncodePage UrlEncodePage { get; set; }
+        public static HeaderFormat HeaderFormat { get; set; }
 
 
         static ConfigManager()
@@ -21,6 +22,7 @@ namespace SuperToolBox.Config
             Main = Main.CreateInstance();
             Settings = Settings.CreateInstance();
             UrlEncodePage = UrlEncodePage.CreateInstance();
+            HeaderFormat = HeaderFormat.CreateInstance();
         }
 
         public static void InitConfig()

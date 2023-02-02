@@ -1,5 +1,5 @@
 ﻿<Page
-    x:Class="SuperToolBox.ToolPages.UrlEncodeDecode"
+    x:Class="SuperToolBox.ToolPages.HeaderFormat"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
@@ -8,7 +8,7 @@
     xmlns:local="clr-namespace:SuperToolBox.ToolPages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:super="https://github.com/SuperStudio/SuperControls"
-    Title="UrlEncodeDecode"
+    Title="HeaderFormat"
     d:DesignHeight="450"
     d:DesignWidth="800"
     Loaded="Page_Loaded"
@@ -18,7 +18,6 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="5*" />
-            <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="5*" />
 
 
@@ -78,44 +77,16 @@
                     super:CheckBoxExt.MarkWidth="18"
                     Content="自动换行"
                     FontSize="14"
-                    IsChecked="{Binding AutoWrap, Source={x:Static config:ConfigManager.UrlEncodePage}}"
+                    IsChecked="{Binding AutoWrap, Source={x:Static config:ConfigManager.HeaderFormat}}"
                     Style="{StaticResource NormalCheckBox}" />
-
-                <Button
-                    BorderBrush="{DynamicResource Button.Selected.BorderBrush}"
-                    Click="FormatOriginText"
-                    Content="格式化"
-                    Style="{StaticResource BorderButton}" />
-
-
-                <Border
-                    Width="25"
-                    Height="25"
-                    Margin="5,0"
-                    Padding="0"
-                    VerticalAlignment="Stretch"
-                    CornerRadius="5"
-                    Cursor="Hand"
-                    MouseLeftButtonUp="Border_MouseLeftButtonUp"
-                    Style="{StaticResource HoverBorder}">
-                    <Viewbox Width="auto" Height="12">
-                        <Path
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Data="M512 128c212 0 384 172 384 384s-172 384-384 384-384-172-384-384 172-384 384-384m0-64C264.8 64 64 264.8 64 512s200.8 448 448 448 448-200.8 448-448S759.2 64 512 64z m32 192h-64v64h64v-64z m0 448V384h-32.8L384 418.4l16.8 61.6 79.2-21.6V704H384v64h256v-64H544z"
-                            Fill="{DynamicResource Window.Foreground}" />
-                    </Viewbox>
-                </Border>
             </StackPanel>
 
             <Border
                 Grid.Row="1"
-                Margin="5"
+                Margin="5,5,10,5"
                 Background="{DynamicResource Window.Side.Background}"
                 BorderThickness="1"
-                CornerRadius="2"
-                PreviewKeyDown="Border_PreviewKeyDown"
-                PreviewMouseWheel="originTextBox_MouseWheel">
+                CornerRadius="2">
 
                 <avalonEdit:TextEditor
                     Name="originTextBox"
@@ -131,7 +102,7 @@
                     ScrollViewer.HorizontalScrollBarVisibility="Auto"
                     ScrollViewer.VerticalScrollBarVisibility="Auto"
                     ShowLineNumbers="True"
-                    SyntaxHighlighting="Json"
+                    SyntaxHighlighting="Normal"
                     TextChanged="originTextBox_TextChanged"
                     WordWrap="{Binding ElementName=checkBox, Path=IsChecked}" />
 
@@ -154,25 +125,6 @@
             </Border>
 
         </Grid>
-
-        <StackPanel
-            Grid.Column="1"
-            Margin="10"
-            VerticalAlignment="Center"
-            Orientation="Vertical">
-            <Button
-                Margin="0,5"
-                BorderBrush="{DynamicResource Button.Selected.BorderBrush}"
-                Click="EncodeText"
-                Content="编码&gt;&gt;"
-                Style="{StaticResource BorderButton}" />
-            <Button
-                Margin="0,5"
-                BorderBrush="{DynamicResource Button.Selected.BorderBrush}"
-                Click="DecodeText"
-                Content="&lt;&lt;解码"
-                Style="{StaticResource BorderButton}" />
-        </StackPanel>
 
         <Grid Grid.Column="2">
             <Grid.RowDefinitions>
@@ -220,7 +172,17 @@
                     </Viewbox>
                 </Button>
 
-
+                <CheckBox
+                    Name="targetCheckBox"
+                    Margin="10,0"
+                    VerticalAlignment="Center"
+                    super:CheckBoxExt.HookWidth="12"
+                    super:CheckBoxExt.MarkHeight="18"
+                    super:CheckBoxExt.MarkWidth="18"
+                    Content="自动换行"
+                    FontSize="14"
+                    IsChecked="{Binding AutoWrapTarget, Source={x:Static config:ConfigManager.HeaderFormat}}"
+                    Style="{StaticResource NormalCheckBox}" />
 
             </StackPanel>
 
@@ -244,9 +206,9 @@
                     ScrollViewer.HorizontalScrollBarVisibility="Auto"
                     ScrollViewer.VerticalScrollBarVisibility="Auto"
                     ShowLineNumbers="True"
-                    SyntaxHighlighting="Normal"
+                    SyntaxHighlighting="Json"
                     TextChanged="targetTextBox_TextChanged"
-                    WordWrap="True" />
+                    WordWrap="{Binding ElementName=targetCheckBox, Path=IsChecked}" />
 
             </Border>
 

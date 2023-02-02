@@ -18,6 +18,35 @@
     </Page.Resources>
 
     <Grid>
+
+        <Grid
+            Panel.ZIndex="99"
+            Background="{DynamicResource Window.Side.Background}"
+            Opacity="0.8"
+            Visibility="{Binding Calculating, Converter={StaticResource bool2VisibilityConverter}, FallbackValue=Collapsed}">
+            <Border
+                Width="200"
+                Height="150"
+                Background="{DynamicResource Window.Title.Background}"
+                CornerRadius="4"
+                Effect="{DynamicResource PopupDropShadowEffect}" />
+
+            <StackPanel
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Orientation="Vertical">
+
+
+                <super:LoadingCircle
+                    Width="40"
+                    Height="40"
+                    DotSize="5" />
+                <TextBlock
+                    Margin="10"
+                    Style="{StaticResource BaseTextBlock}"
+                    Text="计算中" />
+            </StackPanel>
+        </Grid>
         <StackPanel Orientation="Vertical">
             <TabControl
                 Margin="5"
@@ -58,7 +87,11 @@
 
 
 
-                                <Border Margin="10,5" Style="{StaticResource InfoBorder}">
+                                <Border
+                                    Margin="10,5"
+                                    BorderThickness="1"
+                                    CornerRadius="3"
+                                    Style="{StaticResource InfoBorder}">
                                     <TextBox
                                         x:Name="md5OriginTextBlock"
                                         MinHeight="100"
@@ -67,8 +100,11 @@
                                         HorizontalAlignment="Stretch"
                                         VerticalContentAlignment="Top"
                                         Background="Transparent"
+                                        GotFocus="TextBlock_GotFocus"
+                                        LostFocus="TextBlock_LostFocus"
                                         Style="{StaticResource BaseTextBox}"
                                         Text=""
+                                        TextChanged="md5OriginTextBlock_TextChanged"
                                         TextWrapping="Wrap" />
                                 </Border>
 
@@ -119,7 +155,11 @@
                                     </Viewbox>
                                 </Button>
 
-                                <Border Margin="10,5" Style="{StaticResource InfoBorder}">
+                                <Border
+                                    Margin="10,5"
+                                    BorderThickness="1"
+                                    CornerRadius="3"
+                                    Style="{StaticResource InfoBorder}">
                                     <TextBox
                                         x:Name="md5ResultTextBlock"
                                         Height="auto"
@@ -128,6 +168,8 @@
                                         VerticalContentAlignment="Top"
                                         Background="Transparent"
                                         Foreground="{DynamicResource Window.Sub.Foreground}"
+                                        GotFocus="TextBlock_GotFocus"
+                                        LostFocus="TextBlock_LostFocus"
                                         Style="{StaticResource ReadOnlyWrapTextBox}"
                                         TextAlignment="Left"
                                         TextWrapping="Wrap" />
@@ -138,11 +180,19 @@
 
                         <Border
                             Grid.Row="1"
+                            AllowDrop="True"
                             Background="{DynamicResource Window.Side.Background}"
+                            PreviewDragOver="Border_DragOver"
+                            PreviewDrop="Border_Drop"
                             Style="{StaticResource InfoBorder}"
                             Visibility="{Binding ElementName=stringRadioButton, Path=IsChecked, Converter={StaticResource BoolToOppositeVisibilityConverter}}">
                             <StackPanel Orientation="Vertical">
 
+                                <TextBlock
+                                    Margin="10"
+                                    HorizontalAlignment="Left"
+                                    Style="{StaticResource BaseTextBlock}"
+                                    Text="可拖入文件" />
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="auto" />
@@ -165,6 +215,7 @@
                                         PlaceHolder="文件路径"
                                         PlaceHolderForeground="{DynamicResource Window.Sub.Foreground}"
                                         Style="{StaticResource SearchTextBoxStyle}"
+                                        TextChanged="hashFilePathTextBlock_TextChanged"
                                         TextPadding="0 0" />
 
 
@@ -216,7 +267,11 @@
                                     </Viewbox>
                                 </Button>
 
-                                <Border Margin="10,5" Style="{StaticResource InfoBorder}">
+                                <Border
+                                    Margin="10,5"
+                                    BorderThickness="1"
+                                    CornerRadius="3"
+                                    Style="{StaticResource InfoBorder}">
                                     <TextBox
                                         x:Name="md5FileResultTextBlock"
                                         Height="auto"
@@ -225,6 +280,8 @@
                                         VerticalContentAlignment="Top"
                                         Background="Transparent"
                                         Foreground="{DynamicResource Window.Sub.Foreground}"
+                                        GotFocus="TextBlock_GotFocus"
+                                        LostFocus="TextBlock_LostFocus"
                                         Style="{StaticResource ReadOnlyWrapTextBox}"
                                         TextAlignment="Left"
                                         TextWrapping="Wrap" />
@@ -240,9 +297,10 @@
                         <Button
                             Margin="10"
                             HorizontalAlignment="Left"
+                            BorderBrush="{DynamicResource Button.Selected.BorderBrush}"
                             Click="GenerateRandomPwd"
                             Content="生成随机密码"
-                            Style="{StaticResource ButtonPrimary}" />
+                            Style="{StaticResource BorderButton}" />
 
                         <StackPanel Orientation="Horizontal">
                             <TextBlock
@@ -280,7 +338,11 @@
                                     Fill="{DynamicResource Window.Foreground}" />
                             </Viewbox>
                         </Button>
-                        <Border Margin="10,5" Style="{StaticResource InfoBorder}">
+                        <Border
+                            Margin="10,5"
+                            BorderThickness="1"
+                            CornerRadius="3"
+                            Style="{StaticResource InfoBorder}">
                             <TextBox
                                 x:Name="pwdTextBox"
                                 Height="auto"
@@ -289,6 +351,8 @@
                                 VerticalContentAlignment="Top"
                                 Background="Transparent"
                                 Foreground="{DynamicResource Window.Sub.Foreground}"
+                                GotFocus="TextBlock_GotFocus"
+                                LostFocus="TextBlock_LostFocus"
                                 Style="{StaticResource ReadOnlyWrapTextBox}"
                                 TextAlignment="Left"
                                 TextWrapping="Wrap" />

@@ -26,9 +26,9 @@ namespace SuperToolBox.ToolPages
     /// <summary>
     /// Interaction logic for UrlEncodeDecode.xaml
     /// </summary>
-    public partial class UrlEncodeDecode : Page
+    public partial class HeaderFormat : Page
     {
-        public UrlEncodeDecode()
+        public HeaderFormat()
         {
             InitializeComponent();
         }
@@ -103,44 +103,8 @@ namespace SuperToolBox.ToolPages
             }
         }
 
-        private void Border_PreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            if (Keyboard.IsKeyDown(Key.F) && Keyboard.IsKeyDown(Key.LeftAlt) && Keyboard.IsKeyDown(Key.LeftShift))
-            {
-                // 格式化
-                //textEditor.SyntaxHighlighting = null;
-                //textEditor.SyntaxHighlighting = ICSharpCode.AvalonEdit.Highlighting.HighlightingManager.HighlightingDefinitions;
-                FormatString(originTextBox);
-            }
-        }
 
-        private void FormatString(TextEditor textEditor)
-        {
-            string text = textEditor.Text;
-            if (text.IndexOf("\r") >= 0 || text.IndexOf("\n") >= 0)
-            {
-                textEditor.Text = text.Trim()
-                .Replace("\n", "")
-                .Replace("\r", "")
-                .Replace(" ", "");
-            }
-            else
-            {
-                Dictionary<string, object> dictionary = JsonUtils.TryDeserializeObject<Dictionary<string, object>>(textEditor.Text);
-                if (dictionary != null)
-                {
-                    string json_text = JsonUtils.TrySerializeObject(dictionary);
-                    if (!string.IsNullOrEmpty(json_text))
-                        textEditor.Text = json_text;
-                }
 
-            }
-        }
-
-        private void FormatOriginText(object sender, RoutedEventArgs e)
-        {
-            FormatString(originTextBox);
-        }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
@@ -149,8 +113,8 @@ namespace SuperToolBox.ToolPages
             textEditorOptions.HighlightCurrentLine = true;
             originTextBox.Options = textEditorOptions;
 
-            originTextBox.Text = ConfigManager.UrlEncodePage.OriginText;
-            targetTextBox.Text = ConfigManager.UrlEncodePage.TargetText;
+            originTextBox.Text = ConfigManager.HeaderFormat.OriginText;
+            //targetTextBox.Text = ConfigManager.HeaderFormat.TargetText;
 
             SearchPanel.Install(originTextBox);
             SearchPanel.Install(targetTextBox);
@@ -165,9 +129,9 @@ namespace SuperToolBox.ToolPages
         private void SaveText()
         {
 
-            ConfigManager.UrlEncodePage.OriginText = originTextBox.Text;
-            ConfigManager.UrlEncodePage.TargetText = targetTextBox.Text;
-            ConfigManager.UrlEncodePage.Save();
+            ConfigManager.HeaderFormat.OriginText = originTextBox.Text;
+            ConfigManager.HeaderFormat.TargetText = targetTextBox.Text;
+            ConfigManager.HeaderFormat.Save();
         }
 
         private void Border_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -180,7 +144,34 @@ namespace SuperToolBox.ToolPages
             TextEditor textEditor = sender as TextEditor;
             if (originLineTextBlock != null && textEditor != null)
                 originLineTextBlock.Text = $"总长度：{textEditor.Text.Length} 总行数：{textEditor.LineCount}";
+
+            // 转换
+            string text = FormatString(originTextBox.Text);
+            targetTextBox.Text = text;
         }
+
+
+        public string FormatString(string origin)
+        {
+            if (string.IsNullOrEmpty(origin))
+                return "";
+            Dictionary<string, string> dict = new Dictionary<string, string>();
+
+            foreach (var item in origin.Split(Environment.NewLine.ToCharArray()))
+            {
+                if (item.IndexOf(":") > 0 && item.IndexOf(":") < item.Length - 1)
+                {
+                    int idx = item.IndexOf(":");
+                    string key = item.Substring(0, idx).Trim();
+                    string value = item.Substring(idx + 1).Trim();
+                    if (!dict.ContainsKey(key))
+                        dict.Add(key, value);
+                }
+            }
+            return JsonUtils.TrySerializeObject(dict);
+        }
+
+
 
         private void targetTextBox_TextChanged(object sender, EventArgs e)
         {
