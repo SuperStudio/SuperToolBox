@@ -68,7 +68,6 @@ namespace SuperToolBox
             ConfigManager.Main.Y = this.Top;
             ConfigManager.Main.Width = this.Width;
             ConfigManager.Main.Height = this.Height;
-            ConfigManager.Main.WindowState = (long)baseWindowState;
             if (vieModel != null && vieModel.ToolTabs != null)
                 ConfigManager.Main.BeforeOpendTools =
                     string.Join(",", vieModel.ToolTabs.Select(arg => arg.ToolID));
@@ -89,7 +88,6 @@ namespace SuperToolBox
             {
                 if (ConfigManager.Main.Height == SystemParameters.WorkArea.Height && ConfigManager.Main.Width < SystemParameters.WorkArea.Width)
                 {
-                    baseWindowState = 0;
                     this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
                     this.CanResize = true;
                 }
@@ -99,18 +97,6 @@ namespace SuperToolBox
                     this.Top = ConfigManager.Main.Y;
                     this.Width = ConfigManager.Main.Width;
                     this.Height = ConfigManager.Main.Height;
-                }
-
-
-                baseWindowState = (BaseWindowState)ConfigManager.Main.WindowState;
-                if (baseWindowState == BaseWindowState.FullScreen)
-                {
-                    this.WindowState = System.Windows.WindowState.Maximized;
-                }
-                else if (baseWindowState == BaseWindowState.None)
-                {
-                    baseWindowState = 0;
-                    this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
                 }
 
             }
@@ -158,6 +144,11 @@ namespace SuperToolBox
         public void InitUpgrade()
         {
             UpgradeHelper.Init(this);
+            UpgradeHelper.OnBeforeCopyFile += () =>
+            {
+                this.CloseToTaskBar = false;
+                this.Close();
+            };
             CheckUpgrade();
         }
 
@@ -315,12 +306,12 @@ namespace SuperToolBox
             config.PluginBaseDir = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins");
             config.RemoteUrl = UrlManager.GetPluginUrl();
             // 读取本地配置
-            window_Plugin.OnEnabledChange += (enabled) =>
+            window_Plugin.OnEnabledChange += (data, enabled) =>
             {
                 return true;
             };
 
-            window_Plugin.OnDelete += (data) =>
+            window_Plugin.OnBeginDelete += (data) =>
             {
                 return true;
             };

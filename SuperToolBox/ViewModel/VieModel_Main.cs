@@ -15,6 +15,7 @@ namespace SuperToolBox.ViewModel
             {new BaseTool(3,"鼠标控制","MouseControl",1) },
             {new BaseTool(4,"设备信息","DeviceInfo",1 )},
             {new BaseTool(5,"Header格式化","HeaderFormat",1 )},
+            //{new BaseTool(6,"右键菜单","RightMenu",1 )},
             //{new BaseTool(5,"网络监控","NetWorkMonitor") },
         };
 
@@ -32,7 +33,7 @@ namespace SuperToolBox.ViewModel
                 baseTool.Name = item.Name;
                 baseTool.ToolID = item.ToolID;
                 baseTool.MaxOpenCount = item.MaxOpenCount;
-                baseTool.UIPageName = $"pack://application:,,,/ToolPages/{ item.UIPageName}.xaml";
+                baseTool.UIPageName = $"pack://application:,,,/ToolPages/{item.UIPageName}.xaml";
                 ToolList.Add(baseTool);
             }
 
