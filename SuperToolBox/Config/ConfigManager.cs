@@ -15,6 +15,7 @@ namespace SuperToolBox.Config
         public static Settings Settings { get; set; }
         public static UrlEncodePage UrlEncodePage { get; set; }
         public static HeaderFormat HeaderFormat { get; set; }
+        public static KeyBoardConfig KeyBoardConfig { get; set; }
 
 
         static ConfigManager()
@@ -23,6 +24,7 @@ namespace SuperToolBox.Config
             Settings = Settings.CreateInstance();
             UrlEncodePage = UrlEncodePage.CreateInstance();
             HeaderFormat = HeaderFormat.CreateInstance();
+            KeyBoardConfig = KeyBoardConfig.CreateInstance();
         }
 
         public static void InitConfig()

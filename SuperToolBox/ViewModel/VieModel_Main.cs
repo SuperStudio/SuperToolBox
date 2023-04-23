@@ -15,6 +15,7 @@ namespace SuperToolBox.ViewModel
             {new BaseTool(3,"鼠标控制","MouseControl",1) },
             {new BaseTool(4,"设备信息","DeviceInfo",1 )},
             {new BaseTool(5,"Header格式化","HeaderFormat",1 )},
+            {new BaseTool(6,"键盘控制","KeyBoardControl",1 )},
             //{new BaseTool(6,"右键菜单","RightMenu",1 )},
             //{new BaseTool(5,"网络监控","NetWorkMonitor") },
         };
@@ -38,10 +39,18 @@ namespace SuperToolBox.ViewModel
             }
 
             LoadToolList();
+            ToolTabs.CollectionChanged += (s, e) =>
+            {
+                if (ToolTabs != null && ToolTabs.Count > 0)
+                    ShowSoft = false;
+                else
+                    ShowSoft = true;
+            };
         }
 
         public void LoadToolList(string search = "")
         {
+            ToolTabs = new ObservableCollection<BaseTool>();
             CurrentToolList = new ObservableCollection<BaseTool>();
             // 筛选
             List<BaseTool> toolList = ToolList.Where(arg => arg.Name.ToLower().IndexOf(search.ToLower()) >= 0).ToList();
@@ -64,6 +73,13 @@ namespace SuperToolBox.ViewModel
         {
             get { return _ToolTabs; }
             set { _ToolTabs = value; RaisePropertyChanged(); }
+        }
+
+        private bool _ShowSoft = true;
+        public bool ShowSoft
+        {
+            get { return _ShowSoft; }
+            set { _ShowSoft = value; RaisePropertyChanged(); }
         }
 
 

@@ -68,7 +68,7 @@ namespace SuperToolBox.ToolPages
             {
                 if (shaType == SHAType.MD5)
                 {
-                    return SuperUtils.Security.Encrypt.CalculateMD5Hash(origin);
+                    return SuperUtils.Security.Encrypt.TryGetMD5(origin);
                 }
                 else
                 {
@@ -121,7 +121,7 @@ namespace SuperToolBox.ToolPages
             {
                 if (shaType == SHAType.MD5)
                 {
-                    return SuperUtils.Security.Encrypt.GetFileMD5(fileName);
+                    return SuperUtils.Security.Encrypt.TryGetFileMD5(fileName);
                 }
                 else
                 {

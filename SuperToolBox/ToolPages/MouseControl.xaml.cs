@@ -57,8 +57,6 @@ namespace SuperToolBox.ToolPages
 
             // 键盘
             HookManager.KeyUp += HookManager_KeyUp;
-            //HookManager.KeyDown += HookManager_KeyDown;
-            //HookManager.KeyPress += HookManager_KeyPress;
 
             // 鼠标
             HookManager.MouseUp += HookManager_MouseUp;
@@ -157,15 +155,6 @@ namespace SuperToolBox.ToolPages
             {
                 StopCommands(null, null);
             }
-        }
-
-        private void HookManager_KeyPress(object sender, KeyEventArgs e)
-        {
-            Console.WriteLine($"KeyPress = {e.Key}");
-        }
-        private void HookManager_KeyDown(object sender, KeyEventArgs e)
-        {
-            Console.WriteLine($"KeyDown = {e.Key}");
         }
 
         private void HookManager_MouseMove(object sender, MouseEventExtArgs e)

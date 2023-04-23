@@ -126,6 +126,28 @@ namespace SuperToolBox
             InitThemeSelector();
             InitUpgrade();
             OpenBeforeTools();
+            InitNotice();
+        }
+
+        public void InitNotice()
+        {
+            noticeViewer.SetConfig(UrlManager.NOTICE_URL, ConfigManager.Main.LatestNotice);
+            noticeViewer.onError += (error) =>
+            {
+                App.Logger?.Error(error);
+            };
+
+            noticeViewer.onShowMarkdown += (markdown) =>
+            {
+                //MessageCard.Info(markdown);
+            };
+            noticeViewer.onNewNotice += (newNotice) =>
+            {
+                ConfigManager.Main.LatestNotice = newNotice;
+                ConfigManager.Main.Save();
+            };
+
+            noticeViewer.BeginCheckNotice();
         }
 
         private void OpenBeforeTools()
@@ -167,10 +189,10 @@ namespace SuperToolBox
                     local = local.Substring(0, local.Length - ".0.0".Length);
                     if (local.CompareTo(remote) < 0)
                     {
-                        bool opened = (bool)new MsgBox(this,
+                        bool opened = (bool)new MsgBox(
                             $"存在新版本\n版本：{remote}\n日期：{ReleaseDate}").ShowDialog();
                         if (opened)
-                            UpgradeHelper.OpenWindow();
+                            UpgradeHelper.OpenWindow(this);
                     }
                 }
             }
@@ -212,7 +234,7 @@ namespace SuperToolBox
             about.GithubUrl = "https://github.com/SuperStudio/SuperToolBox";
             about.WebUrl = "https://github.com/SuperStudio/SuperToolBox";
             about.JoinGroupUrl = "https://github.com/SuperStudio/SuperToolBox";
-            about.Image = SuperUtils.Media.ImageHelper.ImageFromUri("pack://application:,,,/SuperToolBox;Component/Resources/ICO/Icon_128.png");
+            about.Image = SuperUtils.Media.ImageHelper.ImageFromUri("pack://application:,,,/SuperToolBox;Component/Resources/ICO/ICON_128.png");
             about.ShowDialog();
         }
 
@@ -327,41 +349,56 @@ namespace SuperToolBox
 
         public void InitThemeSelector()
         {
-            DefaultThemeSelector.AddTransParentColor("TabItem.Background");
-            DefaultThemeSelector.AddTransParentColor("Window.Title.Background");
-            DefaultThemeSelector.AddTransParentColor("ListBoxItem.Background");
-            DefaultThemeSelector.AddTransParentColor("DataGrid.Header.Background");
-            DefaultThemeSelector.AddTransParentColor("DataGrid.Header.Hover.Background");
-            DefaultThemeSelector.AddTransParentColor("DataGrid.Row.Even.Background");
-            DefaultThemeSelector.AddTransParentColor("DataGrid.Row.Odd.Background");
-            DefaultThemeSelector.AddTransParentColor("DataGrid.Row.Hover.Background");
-            DefaultThemeSelector.SetThemeConfig(ConfigManager.Settings.ThemeIdx, ConfigManager.Settings.ThemeID);
-            DefaultThemeSelector.onThemeChanged += (ThemeIdx, ThemeID) =>
+            ThemeSelectorDefault.AddTransParentColor("TabItem.Background");
+            ThemeSelectorDefault.AddTransParentColor("Window.Title.Background");
+            ThemeSelectorDefault.AddTransParentColor("ListBoxItem.Background");
+            ThemeSelectorDefault.AddTransParentColor("DataGrid.Header.Background");
+            ThemeSelectorDefault.AddTransParentColor("DataGrid.Header.Hover.Background");
+            ThemeSelectorDefault.AddTransParentColor("DataGrid.Row.Even.Background");
+            ThemeSelectorDefault.AddTransParentColor("DataGrid.Row.Odd.Background");
+            ThemeSelectorDefault.AddTransParentColor("DataGrid.Row.Hover.Background");
+            ThemeSelectorDefault.SetThemeConfig(ConfigManager.Settings.ThemeIdx, ConfigManager.Settings.ThemeID);
+            ThemeSelectorDefault.onThemeChanged += (ThemeIdx, ThemeID) =>
             {
                 ConfigManager.Settings.ThemeIdx = ThemeIdx;
                 ConfigManager.Settings.ThemeID = ThemeID;
                 ConfigManager.Settings.Save();
             };
-            DefaultThemeSelector.onBackGroundImageChanged += (image) =>
+            ThemeSelectorDefault.onBackGroundImageChanged += (image) =>
             {
-                DefaultBgImage.Source = image;
+                ImageBackground.Source = image;
             };
-            DefaultThemeSelector.onSetBgColorTransparent += () =>
+            ThemeSelectorDefault.onSetBgColorTransparent += () =>
             {
-                DefaultTitleBorder.Background = Brushes.Transparent;
-            };
-
-            DefaultThemeSelector.onReSetBgColorBinding += () =>
-            {
-                DefaultTitleBorder.SetResourceReference(Control.BackgroundProperty, "Window.Title.Background");
+                BorderTitle.Background = Brushes.Transparent;
             };
 
-            DefaultThemeSelector.InitThemes();
+            ThemeSelectorDefault.onReSetBgColorBinding += () =>
+            {
+                BorderTitle.SetResourceReference(Control.BackgroundProperty, "Window.Title.Background");
+            };
+
+            ThemeSelectorDefault.InitThemes();
         }
 
         private void ShowUpgradeWindow(object sender, RoutedEventArgs e)
         {
-            UpgradeHelper.OpenWindow();
+            UpgradeHelper.OpenWindow(this);
+        }
+
+        private void OpenFeedBack(object sender, RoutedEventArgs e)
+        {
+            FileHelper.TryOpenUrl(UrlManager.FeedbackUrl);
+        }
+
+        private void OpenHelp(object sender, RoutedEventArgs e)
+        {
+            FileHelper.TryOpenUrl(UrlManager.HelpUrl);
+        }
+
+        private void OpenAppDir(object sender, RoutedEventArgs e)
+        {
+            FileHelper.TryOpenPath(AppDomain.CurrentDomain.BaseDirectory);
         }
     }
 }

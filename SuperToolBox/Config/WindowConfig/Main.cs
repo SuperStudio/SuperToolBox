@@ -31,6 +31,7 @@ namespace SuperToolBox.Config.WindowConfig
         public bool FirstRun { get; set; }
 
         public string BeforeOpendTools { get; set; }
+        public string LatestNotice { get; set; }
 
     }
 }

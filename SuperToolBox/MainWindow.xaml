@@ -15,7 +15,7 @@
     Closing="BaseWindow_Closing"
     ContentRendered="BaseWindow_ContentRendered"
     Foreground="{DynamicResource Window.Foreground}"
-    Icon="/Resources/ICO/Icon_64.png"
+    Icon="/Resources/ICO/ICON.ico"
     ShowThemeSelector="True"
     TitleAlign="Left"
     TitleMargin="5 0"
@@ -51,6 +51,7 @@
                         Style="{StaticResource SearchBoxStyle}" />
                     <ListBox
                         Grid.Row="1"
+                        Margin="5"
                         HorizontalContentAlignment="Stretch"
                         d:ItemsSource="{d:SampleData ItemCount=5}"
                         Background="Transparent"
@@ -131,6 +132,11 @@
                             Style="{StaticResource HoverBorder}">
                             <Border.ContextMenu>
                                 <ContextMenu HorizontalOffset="-40">
+                                    <MenuItem Header="其它">
+                                        <MenuItem Click="OpenFeedBack" Header="反馈" />
+                                        <MenuItem Click="OpenHelp" Header="帮助" />
+                                        <MenuItem Click="OpenAppDir" Header="打开软件目录" />
+                                    </MenuItem>
                                     <MenuItem
                                         Click="OpenSetting"
                                         Header="设置"
@@ -163,9 +169,72 @@
                 Style="{StaticResource HoverSpliter}" />
 
             <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+
+                <super:NoticeViewer x:Name="noticeViewer" Grid.Row="0" />
+
+
+                <StackPanel
+                    Grid.RowSpan="2"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Orientation="Vertical"
+                    Visibility="{Binding ShowSoft, Converter={StaticResource BoolToVisibilityConverter}}">
+
+                    <Image
+                        Grid.Row="0"
+                        Width="128"
+                        Height="128"
+                        Margin="10"
+                        Source="pack://application:,,,/Resources/Ico/ICON_128.png">
+                        <Image.Effect>
+                            <DropShadowEffect
+                                BlurRadius="4"
+                                Direction="315"
+                                Opacity="1"
+                                ShadowDepth="5"
+                                Color="Black" />
+                        </Image.Effect>
+                    </Image>
+                    <TextBlock
+                        Grid.Row="1"
+                        FontSize="25"
+                        Style="{StaticResource BaseTextBlock}"
+                        Text="欢迎使用 SuperToolBox">
+                        <TextBlock.Effect>
+                            <DropShadowEffect
+                                BlurRadius="4"
+                                Direction="315"
+                                Opacity="1"
+                                ShadowDepth="5"
+                                Color="Black" />
+                        </TextBlock.Effect>
+                    </TextBlock>
+                    <TextBlock
+                        Grid.Row="2"
+                        FontSize="15"
+                        Foreground="{DynamicResource Window.Sub.Foreground}"
+                        Style="{StaticResource BaseTextBlock}"
+                        Text="@SuperStudio Copyright © 2022">
+                        <TextBlock.Effect>
+                            <DropShadowEffect
+                                BlurRadius="4"
+                                Direction="315"
+                                Opacity="1"
+                                ShadowDepth="5"
+                                Color="Black" />
+                        </TextBlock.Effect>
+                    </TextBlock>
+                </StackPanel>
+
 
                 <TabControl
                     Name="tabControl"
+                    Grid.Row="1"
                     AlternationCount="100"
                     Background="Transparent"
                     FocusVisualStyle="{x:Null}"

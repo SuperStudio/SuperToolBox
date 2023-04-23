@@ -27,8 +27,10 @@ namespace SuperToolBox.Config
 
         private static string DonateJsonBasePath = "SuperSudio-Donate";
         private static string PluginBasePath = "SuperPlugins";
-        public static string FeedbackUrl = "https://github.com/SuperStudio/SuperCom/issues";
-        public static string HelpUrl = "https://github.com/SuperStudio/SuperCom/wiki";
+        public static string FeedbackUrl = "https://github.com/SuperStudio/SuperToolBox/issues";
+        public static string HelpUrl = "https://github.com/SuperStudio/SuperToolBox/wiki";
+        public const string NOTICE_URL = "https://superstudio.github.io/SuperToolBox-Upgrade/notice.json";
+
 
 
         public static int GetRemoteIndex()

@@ -38,7 +38,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Resources\ICO\favicon.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\ICO\ICON.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -112,6 +112,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Config\ConfigManager.cs" />
+    <Compile Include="Config\PageConfig\KeyBoardConfig.cs" />
     <Compile Include="Config\PageConfig\HeaderFormat.cs" />
     <Compile Include="Config\PageConfig\UrlEncodePage.cs" />
     <Compile Include="Config\UrlManager.cs" />
@@ -123,6 +124,9 @@
     <Compile Include="Entity\BaseTool.cs" />
     <Compile Include="Entity\DriverInfo.cs" />
     <Compile Include="Entity\MouseCommand.cs" />
+    <Compile Include="ToolPages\KeyBoardControl.xaml.cs">
+      <DependentUpon>KeyBoardControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ToolPages\RightMenu.xaml.cs">
       <DependentUpon>RightMenu.xaml</DependentUpon>
     </Compile>
@@ -146,8 +150,12 @@
     </Compile>
     <Compile Include="Upgrade\UpgradeHelper.cs" />
     <Compile Include="Utils\MouseHelper.cs" />
+    <Compile Include="ViewModel\VieModel_KeyBoardControl.cs" />
     <Compile Include="ViewModel\VieModel_MouseControl.cs" />
     <Compile Include="ViewModel\VieModel_Main.cs" />
+    <Compile Include="Windows\Window_KeyBoardView.xaml.cs">
+      <DependentUpon>Window_KeyBoardView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\Window_SelectMousePoint.xaml.cs">
       <DependentUpon>Window_SelectMousePoint.xaml</DependentUpon>
     </Compile>
@@ -167,6 +175,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="ToolPages\KeyBoardControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="ToolPages\RightMenu.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -192,6 +204,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ToolPages\UrlEncodeDecode.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Window_KeyBoardView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -228,16 +244,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\ICO\Icon_128.png" />
-    <Resource Include="Resources\ICO\Icon_32.png" />
-    <Resource Include="Resources\ICO\Icon_64.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\ICO\favicon.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="References\ICSharpCode.AvalonEdit.dll" />
     <Content Include="References\Newtonsoft.Json.dll" />
+    <Resource Include="Resources\ICO\ICON.ico" />
+    <Resource Include="Resources\ICO\ICON_128.png" />
     <Resource Include="Resources\mouse.png" />
     <Resource Include="Resources\donate.png" />
     <Resource Include="Resources\driver.png" />
