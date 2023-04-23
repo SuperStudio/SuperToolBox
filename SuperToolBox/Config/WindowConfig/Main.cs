@@ -32,6 +32,7 @@ namespace SuperToolBox.Config.WindowConfig
 
         public string BeforeOpendTools { get; set; }
         public string LatestNotice { get; set; }
+        public long AsciiSelectedIndex { get; set; }
 
     }
 }

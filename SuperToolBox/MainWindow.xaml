@@ -16,6 +16,8 @@
     ContentRendered="BaseWindow_ContentRendered"
     Foreground="{DynamicResource Window.Foreground}"
     Icon="/Resources/ICO/ICON.ico"
+    MenuAlign="Left"
+    MenuMargin="250 0 0 0"
     ShowThemeSelector="True"
     TitleAlign="Left"
     TitleMargin="5 0"
@@ -26,6 +28,65 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
+
+        <Grid>
+            <Menu x:Name="TopMenus">
+                <MenuItem
+                    Background="{DynamicResource Window.Title.Background}"
+                    Header="文件"
+                    Style="{StaticResource TopMenuItemStyle}">
+                    <MenuItem Click="OpenAppDir" Header="打开软件目录" />
+                </MenuItem>
+                <MenuItem
+                    Background="{DynamicResource Window.Title.Background}"
+                    Header="视图"
+                    Style="{StaticResource TopMenuItemStyle}"
+                    Visibility="Collapsed">
+                    <MenuItem
+                        Name="sideGridMenuItem"
+                        Click="HideSide"
+                        Header="侧边栏"
+                        IsCheckable="True"
+                        IsChecked="True" />
+                </MenuItem>
+                <MenuItem
+                    Background="{DynamicResource Window.Title.Background}"
+                    Header="工具"
+                    Style="{StaticResource TopMenuItemStyle}">
+                    <MenuItem
+                        Click="OpenSetting"
+                        Header="设置"
+                        Icon="/Resources/Pictures/setting.png"
+                        Visibility="Collapsed" />
+                    <MenuItem Click="ShowPluginWindow" Header="插件" />
+                    <Separator Margin="-20,5,10,5" />
+                    <MenuItem
+                        Click="ShowAscii"
+                        Header="ASCII 表"
+                        IsCheckable="False" />
+                    <!--<MenuItem
+                        Click="ShowReferences"
+                        Header="参考文献"
+                        IsCheckable="False" />-->
+                </MenuItem>
+                <MenuItem
+                    Background="{DynamicResource Window.Title.Background}"
+                    Header="关于"
+                    Style="{StaticResource TopMenuItemStyle}">
+                    <MenuItem
+                        Click="ShowUpgradeWindow"
+                        Header="检查更新"
+                        Icon="/Resources/Pictures/update.png" />
+                    <MenuItem
+                        Click="ShowAbout"
+                        Header="关于"
+                        Icon="/Resources/Pictures/about.png" />
+                    <MenuItem Click="OpenFeedBack" Header="反馈" />
+                    <MenuItem Click="OpenHelp" Header="帮助" />
+                </MenuItem>
+
+            </Menu>
+        </Grid>
 
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
@@ -132,23 +193,9 @@
                             Style="{StaticResource HoverBorder}">
                             <Border.ContextMenu>
                                 <ContextMenu HorizontalOffset="-40">
-                                    <MenuItem Header="其它">
-                                        <MenuItem Click="OpenFeedBack" Header="反馈" />
-                                        <MenuItem Click="OpenHelp" Header="帮助" />
-                                        <MenuItem Click="OpenAppDir" Header="打开软件目录" />
-                                    </MenuItem>
-                                    <MenuItem
-                                        Click="OpenSetting"
-                                        Header="设置"
-                                        Visibility="Collapsed" />
                                     <MenuItem Click="ShowPluginWindow" Header="插件" />
                                     <MenuItem Click="ShowUpgradeWindow" Header="检查更新" />
                                     <MenuItem Click="ShowAbout" Header="关于" />
-                                    <MenuItem
-                                        Click="OpenDonate"
-                                        Header="为我充电"
-                                        Icon="/Resources/donate.png"
-                                        Visibility="Collapsed" />
                                 </ContextMenu>
                             </Border.ContextMenu>
                             <Viewbox

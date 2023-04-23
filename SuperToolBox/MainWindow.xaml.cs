@@ -109,6 +109,9 @@ namespace SuperToolBox
 
         private void BaseWindow_ContentRendered(object sender, EventArgs e)
         {
+            this.TopMenu = TopMenus;
+
+
             AdjustWindow();
             if (ConfigManager.Main.FirstRun) ConfigManager.Main.FirstRun = false;
 
@@ -399,6 +402,31 @@ namespace SuperToolBox
         private void OpenAppDir(object sender, RoutedEventArgs e)
         {
             FileHelper.TryOpenPath(AppDomain.CurrentDomain.BaseDirectory);
+        }
+
+        private void ShowAscii(object sender, RoutedEventArgs e)
+        {
+            Window_Ascii window_Ascii = new Window_Ascii((int)ConfigManager.Main.AsciiSelectedIndex);
+            window_Ascii.OnSelectedChanged += (index) =>
+            {
+                ConfigManager.Main.AsciiSelectedIndex = index;
+                ConfigManager.Main.Save();
+            };
+            window_Ascii.Show();
+        }
+
+        private void HideSide(object sender, RoutedEventArgs e)
+        {
+            //MenuItem menuItem = sender as MenuItem;
+            //if (menuItem.IsChecked)
+            //{
+            //    SideGridColumn.Width = new GridLength(200);
+            //}
+            //else
+            //{
+            //    SideGridColumn.Width = new GridLength(0);
+            //    Border_SizeChanged(null, null);
+            //}
         }
     }
 }
