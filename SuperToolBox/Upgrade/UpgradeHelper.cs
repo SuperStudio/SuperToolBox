@@ -65,10 +65,10 @@ namespace SuperToolBox.Upgrade
 
         }
 
-        public static async Task<(string LatestVersion, string ReleaseDate, string ReleaseNote)> GetUpgardeInfo()
+        public static async Task<(string LatestVersion, string ReleaseDate, string ReleaseNote)> GetUpgradeInfo()
         {
             if (Upgrader == null) return (null, null, null);
-            return await Upgrader.GetUpgardeInfo();
+            return await Upgrader.GetUpgradeInfo();
         }
 
         private static SuperUpgrader Upgrader { get; set; }

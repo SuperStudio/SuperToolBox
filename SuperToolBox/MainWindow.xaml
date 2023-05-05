@@ -107,6 +107,8 @@
 
                     <super:SearchBox
                         Name="searchBox"
+                        Margin="0,5"
+                        Background="{DynamicResource Window.Title.Background}"
                         Search="searchBox_Search"
                         SearchOnTextChanged="True"
                         Style="{StaticResource SearchBoxStyle}" />

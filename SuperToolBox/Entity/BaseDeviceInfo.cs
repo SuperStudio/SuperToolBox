@@ -192,7 +192,7 @@ namespace SuperToolBox.Entity
         /// Win32_PageFileUsage
         /// </summary>
 
-        public static List<BaseDeviceInfo> ALL_DEVICCE_INFOS = new List<BaseDeviceInfo>()
+        public static List<BaseDeviceInfo> ALL_DEVICE_INFOS = new List<BaseDeviceInfo>()
         {
             { new BaseDeviceInfo("系统信息",    new string[]{ "Win32_OperatingSystem" },   LoadSysBasicInfo,     SysInfoDictName,           "dataGrid1") },
             { new BaseDeviceInfo("CPU",      new string[] {  "Win32_Processor"},                 LoadCpuInfo,          CpuInfoDictName,           "dataGrid2") },
@@ -266,7 +266,7 @@ namespace SuperToolBox.Entity
                             }
                             catch
                             {
-                                //Add codes to manage more informations
+                                //Add codes to manage more information
                             }
                         }
                     }

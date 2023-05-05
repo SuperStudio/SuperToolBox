@@ -69,7 +69,7 @@ namespace SuperToolBox
             ConfigManager.Main.Width = this.Width;
             ConfigManager.Main.Height = this.Height;
             if (vieModel != null && vieModel.ToolTabs != null)
-                ConfigManager.Main.BeforeOpendTools =
+                ConfigManager.Main.BeforeOpenedTools =
                     string.Join(",", vieModel.ToolTabs.Select(arg => arg.ToolID));
             ConfigManager.Main.Save();
         }
@@ -155,9 +155,9 @@ namespace SuperToolBox
 
         private void OpenBeforeTools()
         {
-            if (!string.IsNullOrEmpty(ConfigManager.Main.BeforeOpendTools))
+            if (!string.IsNullOrEmpty(ConfigManager.Main.BeforeOpenedTools))
             {
-                foreach (var item in ConfigManager.Main.BeforeOpendTools.Split(','))
+                foreach (var item in ConfigManager.Main.BeforeOpenedTools.Split(','))
                 {
                     if (long.TryParse(item, out long id))
                         OpenToolById(id);
@@ -183,7 +183,7 @@ namespace SuperToolBox
             try
             {
                 await Task.Delay(UpgradeHelper.AUTO_CHECK_UPGRADE_DELAY);
-                (string LatestVersion, string ReleaseDate, string ReleaseNote) result = await UpgradeHelper.GetUpgardeInfo();
+                (string LatestVersion, string ReleaseDate, string ReleaseNote) result = await UpgradeHelper.GetUpgradeInfo();
                 string remote = result.LatestVersion;
                 string ReleaseDate = result.ReleaseDate;
                 if (!string.IsNullOrEmpty(remote))

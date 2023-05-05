@@ -10,7 +10,7 @@ namespace SuperToolBox.Config.WindowConfig
             Width = SystemParameters.WorkArea.Width * 0.8;
             Height = SystemParameters.WorkArea.Height * 0.8;
             FirstRun = true;
-            BeforeOpendTools = "";
+            BeforeOpenedTools = "";
         }
 
         private static Main _instance = null;
@@ -30,7 +30,7 @@ namespace SuperToolBox.Config.WindowConfig
 
         public bool FirstRun { get; set; }
 
-        public string BeforeOpendTools { get; set; }
+        public string BeforeOpenedTools { get; set; }
         public string LatestNotice { get; set; }
         public long AsciiSelectedIndex { get; set; }
 

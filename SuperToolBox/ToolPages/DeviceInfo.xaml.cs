@@ -79,7 +79,7 @@ namespace SuperToolBox.ToolPages
                 }
 
 
-                foreach (BaseDeviceInfo deviceInfo in BaseDeviceInfo.ALL_DEVICCE_INFOS)
+                foreach (BaseDeviceInfo deviceInfo in BaseDeviceInfo.ALL_DEVICE_INFOS)
                 {
                     if (!deviceInfo.Name.Equals(name)) continue;
                     Dispatcher.Invoke((Action)(() =>
