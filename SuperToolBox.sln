@@ -5,6 +5,8 @@ VisualStudioVersion = 17.1.31911.260
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuperToolBox", "SuperToolBox\SuperToolBox.csproj", "{1DBABE69-34F1-4976-B717-7BC868199B4D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuperToolBox.Test", "SuperToolBox.Test\SuperToolBox.Test.csproj", "{44766F7A-8456-4CBF-9008-A2BD0BFEB539}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{1DBABE69-34F1-4976-B717-7BC868199B4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1DBABE69-34F1-4976-B717-7BC868199B4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1DBABE69-34F1-4976-B717-7BC868199B4D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44766F7A-8456-4CBF-9008-A2BD0BFEB539}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44766F7A-8456-4CBF-9008-A2BD0BFEB539}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44766F7A-8456-4CBF-9008-A2BD0BFEB539}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44766F7A-8456-4CBF-9008-A2BD0BFEB539}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
