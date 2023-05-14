@@ -16,6 +16,7 @@ namespace SuperToolBox.Config
         public static UrlEncodePage UrlEncodePage { get; set; }
         public static HeaderFormat HeaderFormat { get; set; }
         public static KeyBoardConfig KeyBoardConfig { get; set; }
+        public static TimeTransformConfig TimeTransformConfig { get; set; }
 
 
         static ConfigManager()
@@ -25,6 +26,7 @@ namespace SuperToolBox.Config
             UrlEncodePage = UrlEncodePage.CreateInstance();
             HeaderFormat = HeaderFormat.CreateInstance();
             KeyBoardConfig = KeyBoardConfig.CreateInstance();
+            TimeTransformConfig = TimeTransformConfig.CreateInstance();
         }
 
         public static void InitConfig()

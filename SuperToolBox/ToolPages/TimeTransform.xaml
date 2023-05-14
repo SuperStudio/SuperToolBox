@@ -1,0 +1,230 @@
+﻿<Page
+    x:Class="SuperToolBox.ToolPages.TimeTransform"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:config="clr-namespace:SuperToolBox.Config"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:SuperToolBox.ToolPages"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:super="https://github.com/SuperStudio/SuperControls"
+    Title="时间戳"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    Loaded="Page_Loaded"
+    Unloaded="Page_Unloaded"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+
+        <Style
+            x:Key="InfoDataGridStyle"
+            BasedOn="{StaticResource FlatDataGrid}"
+            TargetType="DataGrid">
+            <Setter Property="Margin" Value="0,5" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="CanUserResizeColumns" Value="True" />
+            <Setter Property="CanUserSortColumns" Value="True" />
+            <Setter Property="IsReadOnly" Value="True" />
+            <Setter Property="AutoGenerateColumns" Value="False" />
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Hidden" />
+
+        </Style>
+
+
+        <DataTemplate x:Key="KeyTemplate">
+            <TextBox
+                MinWidth="40"
+                Margin="0,3"
+                Background="Transparent"
+                Foreground="{DynamicResource Window.Foreground}"
+                IsReadOnly="True"
+                Style="{StaticResource BaseTextBox}"
+                Text="{Binding Key, Mode=OneWay}"
+                TextAlignment="Left" />
+        </DataTemplate>
+        <DataTemplate x:Key="ValueTemplate">
+            <TextBox
+                MinWidth="40"
+                Margin="0,3"
+                Background="Transparent"
+                Foreground="{DynamicResource Window.Sub.Foreground}"
+                IsReadOnly="True"
+                Style="{StaticResource BaseTextBox}"
+                Text="{Binding Value, Mode=OneWay}"
+                TextAlignment="Left" />
+        </DataTemplate>
+
+
+        <DataGridTemplateColumn
+            x:Key="KeyTemplateColumn"
+            Width="2*"
+            MinWidth="50"
+            x:Shared="False"
+            CellTemplate="{StaticResource KeyTemplate}"
+            Header="属性"
+            SortMemberPath="Key" />
+
+        <DataGridTemplateColumn
+            x:Key="ValueTemplateColumn"
+            Width="8*"
+            MinWidth="50"
+            x:Shared="False"
+            CellTemplate="{StaticResource ValueTemplate}"
+            Header="值"
+            SortMemberPath="Value" />
+    </Page.Resources>
+
+
+    <Grid>
+        <ScrollViewer>
+            <StackPanel Margin="5" Orientation="Vertical">
+
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="auto" />
+                    </Grid.ColumnDefinitions>
+                    <Border
+                        Width="80"
+                        Margin="15,10"
+                        HorizontalAlignment="Left"
+                        Background="{DynamicResource Button.Selected.Background}"
+                        Style="{StaticResource InfoBorder}">
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            Style="{StaticResource BaseTextBlock}"
+                            Text="时间戳" />
+
+                    </Border>
+                    <super:SearchBox
+                        Name="TimeStampTextBox"
+                        Grid.Column="1"
+                        Margin="10"
+                        PlaceHolder="0000"
+                        Text="{Binding TimeStampText, Source={x:Static config:ConfigManager.TimeTransformConfig}}" />
+                    <ComboBox
+                        Name="TimeComboBox"
+                        Grid.Column="2"
+                        Width="100"
+                        Margin="10,0"
+                        VerticalAlignment="Center"
+                        SelectedIndex="0"
+                        Style="{StaticResource BorderComboBox}">
+                        <ComboBoxItem Content="秒(s)" />
+                        <ComboBoxItem Content="毫秒(ms)" />
+                    </ComboBox>
+                </Grid>
+
+
+                <StackPanel Margin="120,10" Orientation="Horizontal">
+                    <Button
+                        Width="100"
+                        Click="TimeStampToLocalTime"
+                        Content="↓↓↓"
+                        FontSize="15"
+                        FontWeight="Bold"
+                        Style="{StaticResource ButtonPrimary}" />
+                    <Button
+                        Width="100"
+                        Click="LocalTimeToTimeStamp"
+                        Content="↑↑↑"
+                        FontSize="15"
+                        FontWeight="Bold"
+                        Style="{StaticResource ButtonPrimary}" />
+                </StackPanel>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="auto" />
+                    </Grid.ColumnDefinitions>
+                    <Border
+                        Width="80"
+                        Margin="15,10"
+                        HorizontalAlignment="Left"
+                        Background="{DynamicResource Button.Selected.Background}"
+                        Style="{StaticResource InfoBorder}">
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            Style="{StaticResource BaseTextBlock}"
+                            Text="时间" />
+                    </Border>
+                    <super:SearchBox
+                        Name="LocalTimeTextBox"
+                        Grid.Column="1"
+                        Margin="10"
+                        PlaceHolder="1970-01-01 00:00:00"
+                        Text="{Binding LocalTimeText, Source={x:Static config:ConfigManager.TimeTransformConfig}}" />
+                </Grid>
+
+                <Rectangle
+                    Height="2"
+                    Margin="10,40,10,0"
+                    Fill="{DynamicResource Window.Sub.Foreground}"
+                    RadiusX="2"
+                    RadiusY="2" />
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="auto" />
+                    </Grid.ColumnDefinitions>
+                    <Border
+                        Width="80"
+                        Margin="15,10"
+                        HorizontalAlignment="Left"
+                        Style="{StaticResource InfoBorder}">
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            Style="{StaticResource BaseTextBlock}"
+                            Text="当前时间" />
+                    </Border>
+
+                    <Button
+                        Grid.Column="1"
+                        Width="25"
+                        Height="25"
+                        Margin="5"
+                        Padding="0"
+                        VerticalAlignment="Stretch"
+                        super:CommonExt.CornerRadius="5"
+                        super:CommonExt.HoverBackground="{DynamicResource Window.Title.Hover.Background}"
+                        Click="CopyCurrentTime"
+                        Style="{StaticResource FlatButton}">
+                        <Viewbox Width="auto" Height="14">
+                            <Path
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Data="M891.072 822.144V167.36a34.432 34.432 0 0 0-34.432-34.432H201.856C201.856 94.848 232.704 64 270.784 64h620.288C929.152 64 960 94.848 960 132.928v620.288c0 38.08-30.848 68.928-68.928 68.928z m-68.928-551.36v620.288c0 38.08-30.848 68.928-68.928 68.928H132.928A68.928 68.928 0 0 1 64 891.072V270.784c0-38.08 30.848-68.928 68.928-68.928h620.288c38.08 0 68.928 30.848 68.928 68.928z m-137.856 137.856H201.856a34.432 34.432 0 0 0 0 68.864h482.432a34.432 34.432 0 0 0 0-68.864z m0 206.72H201.856a34.432 34.432 0 0 0 0 68.864h482.432a34.432 34.432 0 0 0 0-68.864z"
+                                Fill="{DynamicResource Window.Foreground}" />
+                        </Viewbox>
+                    </Button>
+                    <super:SearchBox
+                        Name="currentTimeTextBox"
+                        Grid.Column="2"
+                        Margin="10"
+                        IsReadOnly="True"
+                        ShowClearButton="False" />
+                </Grid>
+
+
+                <DataGrid
+                    x:Name="dataGrid"
+                    Margin="20"
+                    Style="{DynamicResource InfoDataGridStyle}">
+                    <DataGrid.Columns>
+                        <StaticResource ResourceKey="KeyTemplateColumn" />
+                        <StaticResource ResourceKey="ValueTemplateColumn" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </StackPanel>
+        </ScrollViewer>
+
+    </Grid>
+</Page>
