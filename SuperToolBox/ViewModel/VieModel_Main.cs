@@ -41,6 +41,9 @@ namespace SuperToolBox.ViewModel
             }
 
             LoadToolList();
+
+            ToolTabs = new ObservableCollection<BaseTool>();
+
             ToolTabs.CollectionChanged += (s, e) =>
             {
                 if (ToolTabs != null && ToolTabs.Count > 0)
@@ -52,7 +55,6 @@ namespace SuperToolBox.ViewModel
 
         public void LoadToolList(string search = "")
         {
-            ToolTabs = new ObservableCollection<BaseTool>();
             CurrentToolList = new ObservableCollection<BaseTool>();
             // 筛选
             List<BaseTool> toolList = ToolList.Where(arg => arg.Name.ToLower().IndexOf(search.ToLower()) >= 0).ToList();

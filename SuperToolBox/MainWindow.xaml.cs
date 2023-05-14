@@ -257,7 +257,8 @@ namespace SuperToolBox
         private void searchBox_Search(object sender, RoutedEventArgs e)
         {
             string value = searchBox.Text;
-            if (string.IsNullOrEmpty(value)) value = "";
+            if (string.IsNullOrEmpty(value))
+                value = "";
             vieModel.LoadToolList(value);
         }
 

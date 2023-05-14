@@ -55,12 +55,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>References\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="SuperControls.Style">
-      <HintPath>..\..\SuperControls\SuperControls.Style\bin\Debug\SuperControls.Style.dll</HintPath>
-    </Reference>
-    <Reference Include="SuperUtils, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SuperControls.Style, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\SuperUtils\SuperUtils\bin\Debug\SuperUtils.dll</HintPath>
+      <HintPath>References\SuperControls.Style.dll</HintPath>
+    </Reference>
+    <Reference Include="SuperUtils, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>References\SuperUtils.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.CodeDom, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
