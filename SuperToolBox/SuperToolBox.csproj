@@ -115,6 +115,7 @@
     <Compile Include="Config\PageConfig\TimeTransformConfig.cs" />
     <Compile Include="Config\PageConfig\KeyBoardConfig.cs" />
     <Compile Include="Config\PageConfig\HeaderFormat.cs" />
+    <Compile Include="Config\PageConfig\CharTransformConfig.cs" />
     <Compile Include="Config\PageConfig\UrlEncodePage.cs" />
     <Compile Include="Config\UrlManager.cs" />
     <Compile Include="Config\WindowConfig\Settings.cs" />
@@ -148,6 +149,9 @@
     </Compile>
     <Compile Include="ToolPages\MouseControl.xaml.cs">
       <DependentUpon>MouseControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ToolPages\CharTransform.xaml.cs">
+      <DependentUpon>CharTransform.xaml</DependentUpon>
     </Compile>
     <Compile Include="ToolPages\UrlEncodeDecode.xaml.cs">
       <DependentUpon>UrlEncodeDecode.xaml</DependentUpon>
@@ -210,6 +214,10 @@
     <Page Include="ToolPages\MouseControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ToolPages\CharTransform.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="ToolPages\UrlEncodeDecode.xaml">
       <SubType>Designer</SubType>

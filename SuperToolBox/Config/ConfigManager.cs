@@ -17,6 +17,7 @@ namespace SuperToolBox.Config
         public static HeaderFormat HeaderFormat { get; set; }
         public static KeyBoardConfig KeyBoardConfig { get; set; }
         public static TimeTransformConfig TimeTransformConfig { get; set; }
+        public static CharTransformConfig CharTransformConfig { get; set; }
 
 
         static ConfigManager()
@@ -27,6 +28,7 @@ namespace SuperToolBox.Config
             HeaderFormat = HeaderFormat.CreateInstance();
             KeyBoardConfig = KeyBoardConfig.CreateInstance();
             TimeTransformConfig = TimeTransformConfig.CreateInstance();
+            CharTransformConfig = CharTransformConfig.CreateInstance();
         }
 
         public static void InitConfig()
