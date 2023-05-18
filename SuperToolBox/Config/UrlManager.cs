@@ -32,6 +32,8 @@ namespace SuperToolBox.Config
         public const string NOTICE_URL = "https://superstudio.github.io/SuperToolBox-Upgrade/notice.json";
 
 
+        public const string SECURE_PWD_HELP = "https://learn.microsoft.com/en-us/dotnet/api/system.web.security.membership.generatepassword?view=netframework-4.8.1";
+
 
         public static int GetRemoteIndex()
         {

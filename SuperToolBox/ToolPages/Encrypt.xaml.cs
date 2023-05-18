@@ -1,4 +1,7 @@
-﻿using SuperUtils.IO;
+﻿using SuperControls.Style;
+using SuperControls.Style.Windows;
+using SuperToolBox.Config;
+using SuperUtils.IO;
 using SuperUtils.WPF.VisualTools;
 using System.ComponentModel;
 using System.IO;
@@ -42,7 +45,7 @@ namespace SuperToolBox.ToolPages
         public Encrypt()
         {
             InitializeComponent();
-            mainWindow = WindowHelper.GetWindowByName("MainWindow", App.Current.Windows) as MainWindow;
+            mainWindow = SuperUtils.WPF.VisualTools.WindowHelper.GetWindowByName("MainWindow", App.Current.Windows) as MainWindow;
             this.DataContext = this;
         }
 
@@ -188,6 +191,13 @@ namespace SuperToolBox.ToolPages
         private void TextBlock_LostFocus(object sender, RoutedEventArgs e)
         {
             ((sender as TextBox).Parent as Border).BorderBrush = Brushes.Transparent;
+        }
+
+        private void ShowSecureHelp(object sender, RoutedEventArgs e)
+        {
+            if ((bool)new MsgBox("使用安全加密的强随机数生成密码，是否查看其实现方式？").ShowDialog())
+                FileHelper.TryOpenUrl(UrlManager.SECURE_PWD_HELP);
+
         }
     }
 }

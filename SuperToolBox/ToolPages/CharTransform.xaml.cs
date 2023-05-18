@@ -108,7 +108,7 @@ namespace SuperToolBox.ToolPages
             textEditorOptions.HighlightCurrentLine = true;
             originTextBox.Options = textEditorOptions;
 
-            originTextBox.Text = ConfigManager.UrlEncodePage.OriginText;
+            originTextBox.Text = ConfigManager.CharTransformConfig.OriginText;
             SearchPanel.Install(originTextBox);
 
             SEARCHBOX_DICT = new List<SearchBox>()

@@ -72,7 +72,7 @@
 
                 <Border
                     Padding="10,0"
-                    Background="{DynamicResource ListBoxItem.Background}"
+                    Background="{DynamicResource Window.Side.Background}"
                     CornerRadius="5"
                     Style="{StaticResource InfoBorder}">
                     <StackPanel x:Name="stackPanel1" Orientation="Horizontal">
@@ -169,11 +169,10 @@
                 Click="Transform"
                 Style="{StaticResource ButtonPrimary}">
                 <StackPanel Orientation="Vertical">
-                    <TextBlock Text="&gt;&gt;&gt;" />
-                    <TextBlock Text="" />
-                    <TextBlock Text="转换" />
-                    <TextBlock Text="" />
-                    <TextBlock Text="&gt;&gt;&gt;" />
+                    <TextBlock
+                        FontWeight="Bold"
+                        Style="{StaticResource BaseTextBlock}"
+                        Text="转换" />
                 </StackPanel>
             </Button>
 

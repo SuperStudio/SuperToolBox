@@ -236,8 +236,8 @@ namespace SuperToolBox
             about.License = "GPL-3.0";
             about.GithubUrl = "https://github.com/SuperStudio/SuperToolBox";
             about.WebUrl = "https://github.com/SuperStudio/SuperToolBox";
-            about.JoinGroupUrl = "https://github.com/SuperStudio/SuperToolBox";
-            about.Image = SuperUtils.Media.ImageHelper.ImageFromUri("pack://application:,,,/SuperToolBox;Component/Resources/ICO/ICON_128.png");
+            about.JoinGroupUrl = "http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=NUWfnBvGoMYevSVIvO5rWQEc0yz34p7m&authKey=V77%2F8cODFvwONlULFSxHtdlCqqYHPT16%2BQsoRD2%2FlJLzX6Kyu0Eob8KO0jC7OREG&noverify=0&group_code=589132982";
+            about.Image = ImageHelper.ImageFromUri("pack://application:,,,/SuperToolBox;Component/Resources/ICO/ICON_128.png");
             about.ShowDialog();
         }
 

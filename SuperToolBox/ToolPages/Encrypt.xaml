@@ -290,14 +290,21 @@
                 </TabItem>
                 <TabItem Header="生成密码">
                     <StackPanel Orientation="Vertical">
-                        <Button
-                            Margin="10"
-                            HorizontalAlignment="Left"
-                            BorderBrush="{DynamicResource Button.Selected.BorderBrush}"
-                            Click="GenerateRandomPwd"
-                            Content="生成随机密码"
-                            Style="{StaticResource BorderButton}" />
-
+                        <StackPanel Orientation="Horizontal">
+                            <Button
+                                Margin="10"
+                                HorizontalAlignment="Left"
+                                BorderBrush="{DynamicResource Button.Selected.BorderBrush}"
+                                Click="GenerateRandomPwd"
+                                Content="生成随机密码"
+                                Style="{StaticResource BorderButton}" />
+                            <Button
+                                Margin="10"
+                                HorizontalAlignment="Left"
+                                Click="ShowSecureHelp"
+                                Content="安全性？"
+                                Style="{StaticResource ButtonSuccess}" />
+                        </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock
                                 Margin="10,0"
