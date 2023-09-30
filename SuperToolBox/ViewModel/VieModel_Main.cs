@@ -27,7 +27,7 @@ namespace SuperToolBox.ViewModel
             Init();
         }
 
-        public void Init()
+        public override void Init()
         {
             ToolList = new List<BaseTool>();
             foreach (var item in TOOLS)
@@ -107,8 +107,6 @@ namespace SuperToolBox.ViewModel
             }
 
         }
-
-
     }
 
 }

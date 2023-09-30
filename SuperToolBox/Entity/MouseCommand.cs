@@ -1,6 +1,7 @@
 ﻿using SuperToolBox.Config;
 using SuperUtils.Enums;
 using SuperUtils.Framework.ORM.Attributes;
+using SuperUtils.Framework.ORM.Enums;
 using SuperUtils.Framework.ORM.Mapper;
 using SuperUtils.WPF.VieModel;
 using System;
@@ -20,28 +21,23 @@ namespace SuperToolBox.Entity
         private long _ID;
 
         [TableId(IdType.AUTO)]
-        public long ID
-        {
+        public long ID {
             get { return _ID; }
             set { _ID = value; RaisePropertyChanged(); }
         }
         private int _PointX;
-        public int PointX
-        {
+        public int PointX {
             get { return _PointX; }
-            set
-            {
+            set {
                 _PointX = value;
                 MousePointText = $"({value},{PointY})";
                 RaisePropertyChanged();
             }
         }
         private int _PointY;
-        public int PointY
-        {
+        public int PointY {
             get { return _PointY; }
-            set
-            {
+            set {
                 _PointY = value;
                 MousePointText = $"({PointX},{value})";
                 RaisePropertyChanged();
@@ -49,43 +45,35 @@ namespace SuperToolBox.Entity
         }
 
         private MouseButton _MouseButton;
-        public MouseButton MouseButton
-        {
+        public MouseButton MouseButton {
             get { return _MouseButton; }
-            set
-            {
+            set {
                 _MouseButton = value;
                 RaisePropertyChanged();
             }
         }
         private MouseAction _MouseAction;
-        public MouseAction MouseAction
-        {
+        public MouseAction MouseAction {
             get { return _MouseAction; }
-            set
-            {
+            set {
                 _MouseAction = value;
                 RaisePropertyChanged();
             }
         }
 
         private int _Delay;
-        public int Delay
-        {
+        public int Delay {
             get { return _Delay; }
-            set
-            {
+            set {
                 _Delay = value;
                 RaisePropertyChanged();
             }
         }
         private int _CommandOrder;
 
-        public int CommandOrder
-        {
+        public int CommandOrder {
             get { return _CommandOrder; }
-            set
-            {
+            set {
                 _CommandOrder = value;
                 RaisePropertyChanged();
             }
@@ -94,11 +82,9 @@ namespace SuperToolBox.Entity
         private RunningStatus _Status = RunningStatus.Waiting;
 
         [TableField(exist: false)]
-        public RunningStatus Status
-        {
+        public RunningStatus Status {
             get { return _Status; }
-            set
-            {
+            set {
                 _Status = value;
                 RaisePropertyChanged();
             }
@@ -106,11 +92,9 @@ namespace SuperToolBox.Entity
         private string _MousePointText = "(0,0)";
 
         [TableField(exist: false)]
-        public string MousePointText
-        {
+        public string MousePointText {
             get { return _MousePointText; }
-            set
-            {
+            set {
                 _MousePointText = value;
                 RaisePropertyChanged();
             }
@@ -135,13 +119,16 @@ namespace SuperToolBox.Entity
         public static void InitSqlite()
         {
             SqliteMapper<MouseCommand> mapper = new SqliteMapper<MouseCommand>(ConfigManager.SQLITE_DATA_PATH);
-            foreach (var item in SqliteTable.Table.Keys)
-            {
-                if (!mapper.IsTableExists(item))
-                {
+            foreach (var item in SqliteTable.Table.Keys) {
+                if (!mapper.IsTableExists(item)) {
                     mapper.CreateTable(item, SqliteTable.Table[item]);
                 }
             }
+        }
+
+        public override void Init()
+        {
+            throw new NotImplementedException();
         }
     }
 

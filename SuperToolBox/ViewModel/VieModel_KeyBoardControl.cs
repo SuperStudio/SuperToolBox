@@ -24,12 +24,12 @@ namespace SuperToolBox.ViewModel
         {
 
         }
+ 
 
-        public void Init()
+        public override void Init()
         {
-
+            throw new System.NotImplementedException();
         }
-
     }
 
 }

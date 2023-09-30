@@ -51,5 +51,10 @@ namespace SuperToolBox.Entity
             this.UIPageName = UIPageName;
             this.MaxOpenCount = maxOpenCount;
         }
+
+        public override void Init()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

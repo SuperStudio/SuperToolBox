@@ -26,7 +26,7 @@ namespace SuperToolBox.ViewModel
             commandMapper = new SqliteMapper<MouseCommand>(ConfigManager.SQLITE_DATA_PATH);
         }
 
-        public void Init()
+        public override void Init()
         {
             MouseCommands = new ObservableCollection<MouseCommand>();
             List<MouseCommand> mouseCommands = commandMapper.SelectList();

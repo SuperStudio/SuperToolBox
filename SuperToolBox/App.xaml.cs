@@ -19,15 +19,17 @@ namespace SuperToolBox
     /// </summary>
     public partial class App : Application
     {
-        public static Log Logger = Log.Instance;
+        public static Log Logger { get; set; } = Log.Instance;
         static App()
         {
-            Window_ErrorMsg.OnFeedBack += () =>
-            {
+            SuperUtils.Handler.LogHandler.Logger = Logger;
+            SuperControls.Style.Handler.LogHandler.Logger = Logger;
+
+
+            Window_ErrorMsg.OnFeedBack += () => {
                 FileHelper.TryOpenUrl(UrlManager.FeedbackUrl);
             };
-            Window_ErrorMsg.OnLog += (str) =>
-            {
+            Window_ErrorMsg.OnLog += (str) => {
                 Logger.Error(str);
             };
         }

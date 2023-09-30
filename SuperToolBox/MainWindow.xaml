@@ -366,6 +366,9 @@
                 Text="{Binding StatusText}"
                 TextWrapping="NoWrap" />
 
+            <super:SysInfo VerticalAlignment="Stretch" Foreground="{DynamicResource Window.Background}" />
+
+
         </Grid>
 
     </Grid>
