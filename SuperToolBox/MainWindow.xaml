@@ -91,8 +91,8 @@
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition
-                    Width="200"
-                    MinWidth="100"
+                    Width="220"
+                    MinWidth="0"
                     MaxWidth="500" />
                 <ColumnDefinition Width="5" />
                 <ColumnDefinition Width="*" />

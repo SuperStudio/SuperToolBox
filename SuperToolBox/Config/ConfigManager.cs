@@ -8,7 +8,7 @@ namespace SuperToolBox.Config
     public static class ConfigManager
     {
         public const string SQLITE_DATA_PATH = "user_data.sqlite";
-        public const string RELEASE_DATE = "2023-05-18";
+        public const string RELEASE_DATE = "2023-10-3";
 
 
         public static Main Main { get; set; }

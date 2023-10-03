@@ -346,7 +346,7 @@ namespace SuperToolBox
             {
                 return true;
             };
-
+            window_Plugin.Icon = this.Icon;
             window_Plugin.SetConfig(config);
             window_Plugin.Show();
         }
@@ -413,6 +413,7 @@ namespace SuperToolBox
                 ConfigManager.Main.AsciiSelectedIndex = index;
                 ConfigManager.Main.Save();
             };
+            window_Ascii.Icon = this.Icon;
             window_Ascii.Show();
         }
 

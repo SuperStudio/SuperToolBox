@@ -14,7 +14,7 @@ namespace SuperToolBox.ViewModel
             {new BaseTool(2,"加密","Encrypt" ,1)},
             {new BaseTool(3,"鼠标控制","MouseControl",1) },
             {new BaseTool(4,"设备信息","DeviceInfo",1 )},
-            {new BaseTool(5,"Header格式化","HeaderFormat",1 )},
+            {new BaseTool(5,"HTTP请求JSON化","HeaderFormat",1 )},
             {new BaseTool(6,"键盘控制","KeyBoardControl",1 )},
             {new BaseTool(7,"时间戳","TimeTransform",1 )},
             {new BaseTool(8,"进制转换","CharTransform",1 )},

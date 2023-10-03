@@ -125,6 +125,7 @@
     <Compile Include="Converters\MouseEventConverter.cs" />
     <Compile Include="Entity\BaseDeviceInfo.cs" />
     <Compile Include="Entity\BaseTool.cs" />
+    <Compile Include="Entity\BaseDeviceInfoView.cs" />
     <Compile Include="Entity\DriverInfo.cs" />
     <Compile Include="Entity\MouseCommand.cs" />
     <Compile Include="ToolPages\TimeTransform.xaml.cs">

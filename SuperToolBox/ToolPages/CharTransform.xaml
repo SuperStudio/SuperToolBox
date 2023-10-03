@@ -162,19 +162,13 @@
 
         <Grid Grid.Column="1" Margin="10">
             <Button
+                Width="50"
                 Height="100"
                 Margin="0,5"
                 VerticalAlignment="Center"
-                BorderBrush="{DynamicResource Button.Selected.BorderBrush}"
                 Click="Transform"
-                Style="{StaticResource ButtonPrimary}">
-                <StackPanel Orientation="Vertical">
-                    <TextBlock
-                        FontWeight="Bold"
-                        Style="{StaticResource BaseTextBlock}"
-                        Text="转换" />
-                </StackPanel>
-            </Button>
+                Content="转换"
+                Style="{StaticResource ButtonPrimary}" />
 
         </Grid>
 

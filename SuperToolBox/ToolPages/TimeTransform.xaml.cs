@@ -85,15 +85,12 @@ namespace SuperToolBox.ToolPages
                 }
             }
 
-
-
-
-
-
             Dispatcher.Invoke((Action)(() =>
             {
-                dataGrid.ItemsSource = null;
-                dataGrid.ItemsSource = deviceInfo.ValueDict;
+                Dictionary<string, object> d = deviceInfo.ValueDict;
+                if(d.ContainsKey("时区名称") && d["时区名称"] is string region) {
+                    regionText.Text = region;
+                }
             }));
 
         }
@@ -133,6 +130,13 @@ namespace SuperToolBox.ToolPages
         private void CopyCurrentTime(object sender, RoutedEventArgs e)
         {
             ClipBoard.TrySetDataObject(currentTimeTextBox.Text);
+        }
+
+        private void FillCurrentTime(object sender, RoutedEventArgs e)
+        {
+            string currentTIme = currentTimeTextBox.Text;
+            LocalTimeTextBox.Text = currentTIme;
+            LocalTimeToTimeStamp(null, null);
         }
     }
 }
